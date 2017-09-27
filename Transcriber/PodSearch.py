@@ -6,10 +6,13 @@ from tkFileDialog import askopenfilename
 import speech_recognition as sr #pip install SpeechRecognition
 import os
 from transcriber import transcribe
+import re
 
 
 class PodSearch:
     
+    filename = ""
+
     #Initialization
     def __init__(self, master):
         frame = Frame(master)
@@ -31,25 +34,60 @@ class PodSearch:
         #Textbox
         self.searchEntry = Entry(master)
         self.searchEntry.pack()
+        self.searchEntry.bind('<Return>', lambda _: self.search())
 
         #Search button
         self.searchBtn = Button(master, text="Search", command=self.search)
         self.searchBtn.pack()
 
+        #Word label
+        self.wordlabel = Label(master)
+        self.wordlabel.pack()
+
+        #Character label
+        self.numberlabel = Label(master)
+        self.numberlabel.pack()
+
 
     #Browse function
     def browse(self):
         #openfile dialog and put file in filename
-        filename = askopenfilename()
+        self.filename = askopenfilename()
         #show filename as label
-        self.pathlabel.config(text=basename(filename))
+        self.pathlabel.config(text=basename(self.filename))
         #Call transcribe
-        tran = transcribe(filename)
+        tran = transcribe(self.filename)
         #self.signalWave(filename)
 
     #Search function
-    def search(filename):
-        f = open(filename)
+    def search(self):
+
+
+        #Open transcription
+        wavePath = basename(self.filename)    
+        trans = wavePath.replace(".wav", ".txt")
+
+        with open('transcribed/' + trans, 'r') as f:
+            transcription=f.read().replace('\n ', '')
+
+        keyword = self.searchEntry.get()
+        
+        
+
+        #Split transcription into words
+        words = transcription.split(' ')
+        if keyword in words:
+            pos = words.index(keyword)
+        
+
+        lines = transcription.find(keyword)
+        
+        print("Word number " + str(pos+1))
+        print("Charachter number " + str(lines+1))
+
+        #Write result to label
+        self.wordlabel.config(text="Word number " + str(pos+1))
+        self.numberlabel.config(text="Character number " + str(lines+1))
 
 
 
