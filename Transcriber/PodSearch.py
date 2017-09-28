@@ -6,6 +6,7 @@ from tkFileDialog import askopenfilename
 import speech_recognition as sr #pip install SpeechRecognition
 import os
 from transcriber import transcribe
+from worder import wordcloud_create
 
 
 class PodSearch:
@@ -46,6 +47,8 @@ class PodSearch:
         #Call transcribe
         tran = transcribe(filename)
         #self.signalWave(filename)
+        wordcloud_create(filename)
+
 
     #Search function
     def search(filename):

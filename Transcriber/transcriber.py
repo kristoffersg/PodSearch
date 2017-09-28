@@ -13,8 +13,6 @@ def transcribe(filename):
     if(os.path.isdir('res')):
         shutil.rmtree('res')
     
-
-
     # Set source to the audio file in question
     rawInput = basename(filename)    
     input_ = rawInput.replace(".wav", "")
@@ -23,7 +21,7 @@ def transcribe(filename):
     dest = 'res/output-'
 
     # # Pre-set variables___________________________________________________________________________________________________
-    # Podcast splitting interval in seconds
+    # Podcast splitting interval (in seconds)
     interval_ = 20
     # Overlap in seconds
     overlap_ = 2
