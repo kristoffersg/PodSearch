@@ -1,16 +1,10 @@
 #!/Users/ksg/miniconda2/bin/python2.7
-from os import path
-from Tkinter import *
+from Tkinter import Tk, Button, Frame, Label, LEFT, Entry
 from os.path import basename
 from tkFileDialog import askopenfilename
-import speech_recognition as sr #pip install SpeechRecognition
-import os
 from transcriber import transcribe
-import re
 
-
-class PodSearch:
-    
+class PodSearch(object):    
     filename = ""
 
     #Initialization
@@ -51,65 +45,39 @@ class PodSearch:
 
     #Browse function
     def browse(self):
-        #openfile dialog and put file in filename
-        self.filename = askopenfilename()
-        #show filename as label
-        self.pathlabel.config(text=basename(self.filename))
-        #Call transcribe
-        tran = transcribe(self.filename)
-        #self.signalWave(filename)
+        self.filename = askopenfilename()                           #openfile dialog and put file in filename
+        self.pathlabel.config(text=basename(self.filename))         #show filename as label
+        transcribe(self.filename)                                   #Call transcribe
 
     #Search function
     def search(self):
-
-
         #Open transcription
         wavePath = basename(self.filename)    
         trans = wavePath.replace(".wav", ".txt")
 
-        with open('transcribed/' + trans, 'r') as f:
-            transcription=f.read().replace('\n ', '')
+        with open('transcribed/' + trans, 'r') as f:                #Open transcribed file
+            transcription = f.read().replace('\n ', '')
 
-        keyword = self.searchEntry.get()
-        
-        
+        keyword = self.searchEntry.get()                            #Get entry from textbox
+        words = transcription.split(' ')                            #Split transcription into words
 
-        #Split transcription into words
-        words = transcription.split(' ')
-        if keyword in words:
-            pos = words.index(keyword)
-        
+        #Find number of character
+        charLabel = "Character number "
+        for i, _ in enumerate(transcription):
+            if transcription[i:i + len(keyword)] == keyword:
+                charPos = i+1
+                charLabel += " " + str(charPos) + ","
 
-        lines = transcription.find(keyword)
-        
-        print("Word number " + str(pos+1))
-        print("Charachter number " + str(lines+1))
+        #Find number of word
+        wordLabel = " Word number"
+        for i, _ in enumerate(words):
+            if keyword in _:
+                wordPos = i+1
+                wordLabel += " " + str(wordPos) + ","
 
         #Write result to label
-        self.wordlabel.config(text="Word number " + str(pos+1))
-        self.numberlabel.config(text="Character number " + str(lines+1))
-
-
-
-
-
-
-
-    # #Generate signal wave
-    # def signalWave(self, filename):
-    #     spf = wave.open(filename, 'r')
-    #     #Extract raw audio from wav file
-    #     signal = spf.readframes(-1)
-    #     signal = np.fromstring(signal, 'Int16')
-    #     #if stereo
-    #     if spf.getnchannels() == 2:
-    #         print 'Only momo files'
-    #         sys.exit(0)
-
-    #     plt.figure(1)
-    #     plt.title('signal Wave...')
-    #     plt.plot(signal)
-    #     plt.show()
+        self.wordlabel.config(text=wordLabel)
+        self.numberlabel.config(text=charLabel)
 
 
 root = Tk()
