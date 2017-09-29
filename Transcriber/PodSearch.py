@@ -12,7 +12,6 @@ class PodSearch(object):
         frame = Frame(master)
         frame.pack()
 
-
         #Browse button
         self.browseBtn = Button(frame, text="Browse", command=self.browse)
         self.browseBtn.pack(side=LEFT)
@@ -41,7 +40,6 @@ class PodSearch(object):
         #Character label
         self.numberlabel = Label(master)
         self.numberlabel.pack()
-
 
     #Browse function
     def browse(self):
