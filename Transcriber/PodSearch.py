@@ -46,6 +46,7 @@ class PodSearch(object):
         self.filename = askopenfilename()                           #openfile dialog and put file in filename
         self.pathlabel.config(text=basename(self.filename))         #show filename as label
         transcribe(self.filename)                                   #Call transcribe
+        self.numberlabel.config(text="")                            #Clears "No file selected" label
 
     #Search function
     def search(self):
@@ -53,29 +54,36 @@ class PodSearch(object):
         wavePath = basename(self.filename)    
         trans = wavePath.replace(".wav", ".txt")
 
-        with open('transcribed/' + trans, 'r') as f:                #Open transcribed file
-            transcription = f.read().replace('\n ', '')
+        if not trans == '':
+            if not self.searchEntry.get() == '':
+                with open('transcribed/' + trans, 'r') as f:                #Open transcribed file
+                    transcription = f.read().replace('\n ', '')
 
-        keyword = self.searchEntry.get()                            #Get entry from textbox
-        words = transcription.split(' ')                            #Split transcription into words
+                keyword = self.searchEntry.get()                            #Get entry from textbox
+                words = transcription.split(' ')                            #Split transcription into words
 
-        #Find number of character
-        charLabel = "Character number "
-        for i, _ in enumerate(transcription):
-            if transcription[i:i + len(keyword)] == keyword:
-                charPos = i+1
-                charLabel += " " + str(charPos) + ","
+                #Find number of character
+                charLabel = "Character number "
+                for i, _ in enumerate(transcription):
+                    if transcription[i:i + len(keyword)] == keyword:
+                        charPos = i+1
+                        charLabel += " " + str(charPos) + ","
 
-        #Find number of word
-        wordLabel = " Word number"
-        for i, _ in enumerate(words):
-            if keyword in _:
-                wordPos = i+1
-                wordLabel += " " + str(wordPos) + ","
+                #Find number of word
+                wordLabel = " Word number"
+                for i, _ in enumerate(words):
+                    if keyword in _:
+                        wordPos = i+1
+                        wordLabel += " " + str(wordPos) + ","
 
-        #Write result to label
-        self.wordlabel.config(text=wordLabel)
-        self.numberlabel.config(text=charLabel)
+                #Write result to label
+                self.wordlabel.config(text=wordLabel)
+                self.numberlabel.config(text=charLabel)
+            else:
+                self.numberlabel.config(text="Enter word in search field")
+
+        else:
+            self.numberlabel.config(text="No file selected")
 
 
 root = Tk()
