@@ -1,14 +1,17 @@
 #!/Users/ksg/miniconda2/bin/python2.7
+'''This module is the GUI and some functions'''
 from Tkinter import Tk, Button, Frame, Label, LEFT, Entry
 from os.path import basename
 from tkFileDialog import askopenfilename
 from transcriber import transcribe
 
-class PodSearch(object):    
+class PodSearch(object):
+    '''This is the GUI class'''
     filename = ""
 
     #Initialization
     def __init__(self, master):
+        '''Init of the GUI'''
         frame = Frame(master)
         frame.pack()
 
@@ -43,24 +46,26 @@ class PodSearch(object):
 
     #Browse function
     def browse(self):
-        self.filename = askopenfilename()                           #openfile dialog and put file in filename
-        self.pathlabel.config(text=basename(self.filename))         #show filename as label
-        transcribe(self.filename)                                   #Call transcribe
-        self.numberlabel.config(text="")                            #Clears "No file selected" label
+        '''browse for file'''
+        self.filename = askopenfilename()                  #openfile dialog and put file in filename
+        self.pathlabel.config(text=basename(self.filename)) #show filename as label
+        transcribe(self.filename)                          #Call transcribe
+        self.numberlabel.config(text="")                   #Clears "No file selected" label
 
     #Search function
     def search(self):
+        '''Search in transcription'''
         #Open transcription
-        wavePath = basename(self.filename)    
+        wavePath = basename(self.filename)
         trans = wavePath.replace(".wav", ".txt")
 
         if not trans == '':
             if not self.searchEntry.get() == '':
-                with open('transcribed/' + trans, 'r') as f:                #Open transcribed file
+                with open('transcribed/' + trans, 'r') as f:        #Open transcribed file
                     transcription = f.read().replace('\n ', '')
 
-                keyword = self.searchEntry.get()                            #Get entry from textbox
-                words = transcription.split(' ')                            #Split transcription into words
+                keyword = self.searchEntry.get()                    #Get entry from textbox
+                words = transcription.split(' ')                    #Split transcription into words
 
                 #Find number of character
                 charLabel = "Character number "
