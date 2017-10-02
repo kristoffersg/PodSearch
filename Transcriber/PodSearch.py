@@ -68,24 +68,25 @@ class PodSearch(object):
                 words = transcription.split(' ')                    #Split transcription into words
 
                 #Find number of character
-                charlabel = "Character number "
+                charlabel = "Character number"
                 for i, _ in enumerate(transcription):
                     if transcription[i:i + len(keyword)].lower() == keyword.lower():
                         charpos = i+1
                         charlabel += " " + str(charpos) + ","
 
                 #Find number of word
-                wordlabel = " Word number"
+                wordlabel = "Word number"
                 for i, _ in enumerate(words):
                     if keyword.lower() in _.lower():
                         wordpos = i+1
                         wordlabel += " " + str(wordpos) + ","
 
                 #Write result to label
-                if wordlabel and charlabel != "":
+                if wordlabel != "Word number":
                     self.wordlabel.config(text=wordlabel)
                     self.numberlabel.config(text=charlabel)
                 else:
+                    self.wordlabel.config(text="")
                     self.numberlabel.config(text="Word not found")
             else:
                 self.numberlabel.config(text="Enter word in search field")
