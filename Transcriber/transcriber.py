@@ -43,7 +43,7 @@ def transcribe(filename):
     for i in range(0, iterations):
         # Obtain path to audio files
         AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)),
-            "res/output-1-" + str(i) + ".wav")
+        "res/output-1-" + str(i) + ".wav")
 
         # use the audio file as the audio source
         r = sr.Recognizer()

@@ -70,20 +70,23 @@ class PodSearch(object):
                 #Find number of character
                 charLabel = "Character number "
                 for i, _ in enumerate(transcription):
-                    if transcription[i:i + len(keyword)] == keyword:
+                    if transcription[i:i + len(keyword)].lower() == keyword.lower():
                         charPos = i+1
                         charLabel += " " + str(charPos) + ","
 
                 #Find number of word
                 wordLabel = " Word number"
                 for i, _ in enumerate(words):
-                    if keyword in _:
+                    if keyword.lower() in _.lower():
                         wordPos = i+1
                         wordLabel += " " + str(wordPos) + ","
 
                 #Write result to label
-                self.wordlabel.config(text=wordLabel)
-                self.numberlabel.config(text=charLabel)
+                if wordLabel and charLabel != "":
+                    self.wordlabel.config(text=wordLabel)
+                    self.numberlabel.config(text=charLabel)
+                else:
+                    self.numberlabel.config(text="Word not found")
             else:
                 self.numberlabel.config(text="Enter word in search field")
 
