@@ -16,25 +16,25 @@ class PodSearch(object):
         frame.pack()
 
         #Browse button
-        self.browseBtn = Button(frame, text="Browse", command=self.browse)
-        self.browseBtn.pack(side=LEFT)
+        self.browsebtn = Button(frame, text="Browse", command=self.browse)
+        self.browsebtn.pack(side=LEFT)
 
         #Quit button
-        self.quitBtn = Button(frame, text="Quit", command=frame.quit)
-        self.quitBtn.pack(side=LEFT)
+        self.quitbtn = Button(frame, text="Quit", command=frame.quit)
+        self.quitbtn.pack(side=LEFT)
 
         #Filepath label
         self.pathlabel = Label(master)
         self.pathlabel.pack()
 
         #Textbox
-        self.searchEntry = Entry(master)
-        self.searchEntry.pack()
-        self.searchEntry.bind('<Return>', lambda _: self.search())
+        self.searchentry = Entry(master)
+        self.searchentry.pack()
+        self.searchentry.bind('<Return>', lambda _: self.search())
 
         #Search button
-        self.searchBtn = Button(master, text="Search", command=self.search)
-        self.searchBtn.pack()
+        self.searchbtn = Button(master, text="Search", command=self.search)
+        self.searchbtn.pack()
 
         #Word label
         self.wordlabel = Label(master)
@@ -56,35 +56,35 @@ class PodSearch(object):
     def search(self):
         '''Search in transcription'''
         #Open transcription
-        wavePath = basename(self.filename)
-        trans = wavePath.replace(".wav", ".txt")
+        wavepath = basename(self.filename)
+        trans = wavepath.replace(".wav", ".txt")
 
         if not trans == '':
-            if not self.searchEntry.get() == '':
-                with open('transcribed/' + trans, 'r') as f:        #Open transcribed file
-                    transcription = f.read().replace('\n ', '')
+            if not self.searchentry.get() == '':
+                with open('transcribed/' + trans, 'r') as fn:        #Open transcribed file
+                    transcription = fn.read().replace('\n ', '')
 
-                keyword = self.searchEntry.get()                    #Get entry from textbox
+                keyword = self.searchentry.get()                    #Get entry from textbox
                 words = transcription.split(' ')                    #Split transcription into words
 
                 #Find number of character
-                charLabel = "Character number "
+                charlabel = "Character number "
                 for i, _ in enumerate(transcription):
                     if transcription[i:i + len(keyword)].lower() == keyword.lower():
-                        charPos = i+1
-                        charLabel += " " + str(charPos) + ","
+                        charpos = i+1
+                        charlabel += " " + str(charpos) + ","
 
                 #Find number of word
-                wordLabel = " Word number"
+                wordlabel = " Word number"
                 for i, _ in enumerate(words):
                     if keyword.lower() in _.lower():
-                        wordPos = i+1
-                        wordLabel += " " + str(wordPos) + ","
+                        wordpos = i+1
+                        wordlabel += " " + str(wordpos) + ","
 
                 #Write result to label
-                if wordLabel and charLabel != "":
-                    self.wordlabel.config(text=wordLabel)
-                    self.numberlabel.config(text=charLabel)
+                if wordlabel and charlabel != "":
+                    self.wordlabel.config(text=wordlabel)
+                    self.numberlabel.config(text=charlabel)
                 else:
                     self.numberlabel.config(text="Word not found")
             else:
