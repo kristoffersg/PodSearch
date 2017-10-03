@@ -16,12 +16,12 @@ def transcribe(filename):
     if os.path.isdir('res'):
         shutil.rmtree('res')
 
-    rawInput = basename(filename)                       # Set source to the audio file
-    input_ = rawInput.replace(".wav", "")
+    rawinput = basename(filename)                       # Set source to the audio file
+    input_ = rawinput.replace(".wav", "")
     dest = 'res/output-'                                # Set destination path
 
     # Pre-set variables__________________________________________________________________________
-    interval_ = 20                                      # Podcast splitting interval in seconds
+    interval_ = 14                                      # Podcast splitting interval in seconds
     overlap_ = 2                                        # Overlap in seconds
 
     # Splitting audio file_______________________________________________________________________
@@ -42,22 +42,22 @@ def transcribe(filename):
     # Transcribe for every 20-seconds audio file created
     for i in range(0, iterations):
         # Obtain path to audio files
-        AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)),
+        audio_file = path.join(path.dirname(path.realpath(__file__)),
         "res/output-1-" + str(i) + ".wav")
 
         # use the audio file as the audio source
-        r = sr.Recognizer()
-        with sr.AudioFile(AUDIO_FILE) as source:
-            audio = r.record(source)  # read the entire audio file
+        rec = sr.Recognizer()
+        with sr.AudioFile(audio_file) as source:
+            audio = rec.record(source)  # read the entire audio file
 
         # recognize speech using Google Speech Recognition
         try:
             print "Google is trying"
-            GoogleTranscription = r.recognize_google(audio).encode('utf-8')  #encode is for euro signs and other unicode
-            print "Google Speech Recognition:         " + GoogleTranscription
+            googletranscription = rec.recognize_google(audio).encode('utf-8')  #encode is for euro signs and other unicode
+            print "Google Speech Recognition:         " + googletranscription
 
             text_file = open("transcribed/" + input_ + ".txt", "a")
-            text_file.write(GoogleTranscription + "\n")
+            text_file.write("-- " + googletranscription + " \n")
             text_file.close()
         except sr.UnknownValueError:
             print "Google Speech Recognition could not understand audio"
@@ -66,7 +66,7 @@ def transcribe(filename):
 
 
     # # Write timestamp to txt_____________________________________________________________________
-    Google_elapsed_time = time.time() - start_time
-    print "Google took " + str(Google_elapsed_time) + " seconds"
+    google_elapsed_time = time.time() - start_time
+    print "Google took " + str(google_elapsed_time) + " seconds"
     text_file = open("transcribed/" + input_ + ".txt", "a")
     text_file.close()
