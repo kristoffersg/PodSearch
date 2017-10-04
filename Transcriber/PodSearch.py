@@ -51,28 +51,30 @@ class PodSearch(object):
         self.workinglabel.pack()
 
         # Progress Bar
-        self.pbar_det = ttk.Progressbar(orient="horizontal", length=400, mode="indeterminate")
-
+        self.pbar_det = ttk.Progressbar(
+            orient="horizontal", length=400, mode="indeterminate")
 
     # Browse function
     def browse(self):
         '''browse for file'''
-        if self.wordlabel != "": # clear the labels if necessary
+        if self.wordlabel != "":  # clear the labels if necessary
             self.wordlabel.config(text="")
             self.pathlabel.config(text="")
             self.timestamplabel.config(text="")
         self.filename = askopenfilename()  # openfile dialog and put file in filename
-        if not self.filename: # leave method if cancel is clicked
+        if not self.filename:  # leave method if cancel is clicked
             return
-        self.workinglabel.config(text="WORKING", font=("Helvetica", 20)) # Show WORKING when transcribing
-        self.pbar_det.pack() # show the progress bar
-        self.pbar_det.start() # Start the progress bar
-        self.pathlabel.config(text=basename(self.filename))  # show filename as label
+        self.workinglabel.config(text="WORKING", font=(
+            "Helvetica", 20))  # Show WORKING when transcribing
+        self.pbar_det.pack()  # show the progress bar
+        self.pbar_det.start()  # Start the progress bar
+        self.pathlabel.config(text=basename(self.filename)
+                              )  # show filename as label
         root.update()
-        transcribe(self.filename) # Call transcribe
-        self.workinglabel.config(text="") # remove working label
-        self.pbar_det.stop() # Stop progress bar
-        self.pbar_det.pack_forget() # Remove progress bar
+        transcribe(self.filename)  # Call transcribe
+        self.workinglabel.config(text="")  # remove working label
+        self.pbar_det.stop()  # Stop progress bar
+        self.pbar_det.pack_forget()  # Remove progress bar
 
     # Search function
     def search(self):
