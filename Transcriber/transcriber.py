@@ -8,7 +8,7 @@ def transcribe(filename):
     pass
     start_time = time.time()
 
-    # # Pre-coding__________________________________________________________________________________________________________
+    # # Pre-coding______________________________________________________________________________________________________
     # Clear directory "res"
     if(os.path.isdir('res')):
         shutil.rmtree('res')
@@ -20,13 +20,13 @@ def transcribe(filename):
     # Set destination path
     dest = 'res/output-'
 
-    # # Pre-set variables___________________________________________________________________________________________________
+    # # Pre-set variables_______________________________________________________________________________________________
     # Podcast splitting interval (in seconds)
     interval_ = 20
     # Overlap in seconds
     overlap_ = 2
 
-    # # Splitting audio file________________________________________________________________________________________________
+    # # Splitting audio file____________________________________________________________________________________________
     # extract data from wav file
     data = readwave(filename)
     # # split(data, seconds_pr_split=None, overlap=None):
@@ -82,3 +82,6 @@ def transcribe(filename):
     text_file = open("transcribed/" + input_ + ".txt", "a")
     text_file.write("\n \n" + "Google took " + str(Google_elapsed_time) + " seconds")
     text_file.close()
+
+    path_to_transcribed_file = "transcribed/" + input_ + ".txt"
+    return path_to_transcribed_file

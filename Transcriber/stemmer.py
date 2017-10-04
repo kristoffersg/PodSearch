@@ -12,19 +12,19 @@ def stemmer_func(filename):
     input = filename.replace(".txt", "")
 
     string = open(input + '.txt').read()
-    new_str = re.sub('[^a-zA-Z0-9\n\" "]', '', string)              #Remove all non-alphanumeric characters (./#%,;:)
-    rawInput = basename(input)                                      #Cut away folder path
-    open("wordcloudTools/STEMMED_" + rawInput + '.txt', 'w').close()   #Generate new txt file for stemmed words
+    new_str = re.sub('[^a-zA-Z0-9\n\" "]', '', string)                  #Remove all non-alphanumeric characters (./#%,;:)
+    rawInput = basename(input)                                          #Cut away folder path
+    open("transcribed/stem_" + rawInput + '.txt', 'w').close()          #Generate/reset txt file for stemmed words
 
     ps = PorterStemmer()
     words = word_tokenize(new_str)
     for w in words:
         stemmed = ps.stem(w)
         print(stemmed)
-        open("wordcloudTools/STEMMED_" + rawInput + '.txt', 'a').write(stemmed + " ")
+        open("transcribed/stem_" + rawInput + '.txt', 'a').write(stemmed + " ")
 
     elapsed_time = time.time() - start_time
     print("Stemming took " + str(elapsed_time) + " seconds")
 
-    new_src = "wordcloudTools/STEMMED_" + rawInput + '.txt'
+    new_src = "transcribed/stem_" + rawInput + '.txt'
     return new_src
