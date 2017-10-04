@@ -52,9 +52,9 @@ def transcribe(filename):
 
         # recognize speech using Google Speech Recognition
         try:
-            print "Google is trying"
+            #print "Google is trying"
             googletranscription = rec.recognize_google(audio).encode('utf-8')  #encode is for euro signs and other unicode
-            print "Google Speech Recognition:         " + googletranscription
+            #print "Google Speech Recognition:         " + googletranscription
 
             text_file = open("transcribed/" + input_ + ".txt", "a")
             text_file.write("-- " + googletranscription + " \n")
@@ -67,6 +67,5 @@ def transcribe(filename):
 
     # # Write timestamp to txt_____________________________________________________________________
     google_elapsed_time = time.time() - start_time
-    print "Google took " + str(google_elapsed_time) + " seconds"
     text_file = open("transcribed/" + input_ + ".txt", "a")
     text_file.close()
