@@ -22,7 +22,7 @@ def writewave(dest, data):
     data = separate(data)
     for i in range(len(data)):
         destfile = dest + `i` + '.wav'
-        makedir(destfile) # make sure dir exists
+        makedir(destfile)                           # make sure dir exists
         write = wave.open(destfile, 'wb')
         write.setparams(data[i].meta)
         write.writeframes(data[i].data)

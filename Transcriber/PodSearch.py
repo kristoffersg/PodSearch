@@ -6,7 +6,8 @@ from tkFileDialog import askopenfilename
 import speech_recognition as sr #pip install SpeechRecognition
 import os
 from transcriber import transcribe
-
+from worder import wordcloud_create
+from stemmer import stemmer_func
 
 class PodSearch:
     
@@ -44,8 +45,11 @@ class PodSearch:
         #show filename as label
         self.pathlabel.config(text=basename(filename))
         #Call transcribe
-        tran = transcribe(filename)
+        new_path = transcribe(filename)
         #self.signalWave(filename)
+        wordcloud_create(filename)
+        stemmer_func(new_path)
+
 
     #Search function
     def search(filename):
