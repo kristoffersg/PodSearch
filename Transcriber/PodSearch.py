@@ -5,7 +5,7 @@ from os.path import basename
 from tkFileDialog import askopenfilename
 import ttk
 from transcriber import transcribe
-from worder import wordcloud_create
+# from worder import wordcloud_create
 from stemmer import stemmer_func
 
 
@@ -76,7 +76,7 @@ class PodSearch(object):
         new_path = transcribe(self.filename)  # Call transcribe
         self.workinglabel.config(text="")  # remove working label
 
-        wordcloud_create(self.filename)
+        # wordcloud_create(self.filename)
         stemmer_func(new_path)
 
         self.pbar_det.stop()  # Stop progress bar
@@ -103,12 +103,16 @@ class PodSearch(object):
                 counter = 0
                 wordlabel = "Word number"
                 timestamplabel = ""
+                shift = 0
                 for i, _ in enumerate(words):
                     if _ == "--":
                         counter = counter + 1
+                        shift = i
                     if keyword.lower() in _.lower():
-                        wordpos = i + 1
-                        wordlabel += " " + str(wordpos) + ","
+                        totalwordpos = i + 1
+                        wpsplit = totalwordpos - shift
+                        wordlabel += " " + str(wpsplit) + ","
+
                         timestamplabel += self.maptoaudio(counter)
 
                 # Write result to label
