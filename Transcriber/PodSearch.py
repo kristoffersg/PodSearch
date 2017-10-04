@@ -3,6 +3,7 @@
 from Tkinter import Tk, Button, Frame, Label, LEFT, Entry
 from os.path import basename
 from tkFileDialog import askopenfilename
+import ttk
 from transcriber import transcribe
 
 
@@ -45,13 +46,33 @@ class PodSearch(object):
         self.timestamplabel = Label(master)
         self.timestamplabel.pack()
 
+        # Working Label
+        self.workinglabel = Label(master)
+        self.workinglabel.pack()
+
+        # Progress Bar
+        self.pbar_det = ttk.Progressbar(orient="horizontal", length=400, mode="indeterminate")
+
+
     # Browse function
     def browse(self):
         '''browse for file'''
+        if self.wordlabel != "": # clear the labels if necessary
+            self.wordlabel.config(text="")
+            self.pathlabel.config(text="")
+            self.timestamplabel.config(text="")
         self.filename = askopenfilename()  # openfile dialog and put file in filename
-        self.pathlabel.config(text=basename(self.filename)
-                              )  # show filename as label
-        transcribe(self.filename)  # Call transcribe
+        if not self.filename: # leave method if cancel is clicked
+            return
+        self.workinglabel.config(text="WORKING", font=("Helvetica", 20)) # Show WORKING when transcribing
+        self.pbar_det.pack() # show the progress bar
+        self.pbar_det.start() # Start the progress bar
+        self.pathlabel.config(text=basename(self.filename))  # show filename as label
+        root.update()
+        transcribe(self.filename) # Call transcribe
+        self.workinglabel.config(text="") # remove working label
+        self.pbar_det.stop() # Stop progress bar
+        self.pbar_det.pack_forget() # Remove progress bar
 
     # Search function
     def search(self):
@@ -79,7 +100,7 @@ class PodSearch(object):
                     if keyword.lower() in _.lower():
                         wordpos = i + 1
                         wordlabel += " " + str(wordpos) + ","
-                        timestamplabel += self.spotter(counter)
+                        timestamplabel += self.maptoaudio(counter)
 
                 # Write result to label
                 if wordlabel != "Word number":
@@ -88,23 +109,24 @@ class PodSearch(object):
                     self.timestamplabel.config(text=timestamplabel)
                 else:
                     self.wordlabel.config(text="Word not found")
+                    self.timestamplabel.config(text="")
             else:
                 self.wordlabel.config(text="Enter word in search field")
 
         else:
             self.wordlabel.config(text="No file selected")
 
-    def spotter(self, counter):
+    def maptoaudio(self, counter):
         '''Where in audio is result'''
         seconds1 = (counter - 1) * 12  # Calc interval start
-        m, s = divmod(seconds1, 60)  # Format to hh:mm:ss
-        h, m = divmod(m, 60)
-        time1 = "%d:%02d:%02d" % (h, m, s)
+        minutes, seconds = divmod(seconds1, 60)  # Format to hh:mm:ss
+        hours, minutes = divmod(minutes, 60)
+        time1 = "%d:%02d:%02d" % (hours, minutes, seconds)
 
         seconds2 = (counter - 1) * 12 + 14  # Calc interval end
-        m, s = divmod(seconds2, 60)  # Format to hh:mm:ss
-        h, m = divmod(m, 60)
-        time2 = "%d:%02d:%02d" % (h, m, s)
+        minutes, seconds = divmod(seconds2, 60)  # Format to hh:mm:ss
+        hours, minutes = divmod(minutes, 60)
+        time2 = "%d:%02d:%02d" % (hours, minutes, seconds)
 
         timestamp = time1 + " - " + time2 + ", "
         return timestamp
