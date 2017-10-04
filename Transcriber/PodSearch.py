@@ -109,9 +109,9 @@ class PodSearch(object):
                         counter = counter + 1
                         shift = i
                     if keyword.lower() in _.lower():
-                        wordpos = i + 1
-                        wp = wordpos - shift
-                        wordlabel += " " + str(wp) + ","
+                        totalwordpos = i + 1
+                        wpsplit = totalwordpos - shift
+                        wordlabel += " " + str(wpsplit) + ","
 
                         timestamplabel += self.maptoaudio(counter)
 
