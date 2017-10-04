@@ -8,6 +8,7 @@ from transcriber import transcribe
 from worder import wordcloud_create
 from stemmer import stemmer_func
 
+
 class PodSearch(object):
     '''This is the GUI class'''
     filename = ""
@@ -39,23 +40,6 @@ class PodSearch(object):
         self.searchbtn = Button(master, text="Search", command=self.search)
         self.searchbtn.pack()
 
-    #Browse function
-    def browse(self):
-        #openfile dialog and put file in filename
-        filename = askopenfilename()
-        #show filename as label
-        self.pathlabel.config(text=basename(filename))
-        #Call transcribe
-        new_path = transcribe(filename)
-        #self.signalWave(filename)
-        wordcloud_create(filename)
-        stemmer_func(new_path)
-
-
-    #Search function
-    def search(filename):
-        f = open(filename)
-
         # Word label
         self.wordlabel = Label(master)
         self.wordlabel.pack()
@@ -69,28 +53,35 @@ class PodSearch(object):
         self.workinglabel.pack()
 
         # Progress Bar
-        self.pbar_det = ttk.Progressbar(orient="horizontal", length=400, mode="indeterminate")
-
+        self.pbar_det = ttk.Progressbar(
+            orient="horizontal", length=400, mode="indeterminate")
 
     # Browse function
     def browse(self):
         '''browse for file'''
-        if self.wordlabel != "": # clear the labels if necessary
+        if self.wordlabel != "":  # clear the labels if necessary
             self.wordlabel.config(text="")
             self.pathlabel.config(text="")
             self.timestamplabel.config(text="")
         self.filename = askopenfilename()  # openfile dialog and put file in filename
-        if not self.filename: # leave method if cancel is clicked
+        if not self.filename:  # leave method if cancel is clicked
             return
-        self.workinglabel.config(text="WORKING", font=("Helvetica", 20)) # Show WORKING when transcribing
-        self.pbar_det.pack() # show the progress bar
-        self.pbar_det.start() # Start the progress bar
-        self.pathlabel.config(text=basename(self.filename))  # show filename as label
+        self.workinglabel.config(text="WORKING", font=(
+            "Helvetica", 20))  # Show WORKING when transcribing
+        self.pbar_det.pack()  # show the progress bar
+        self.pbar_det.start()  # Start the progress bar
+        self.pathlabel.config(text=basename(self.filename)
+                              )  # show filename as label
         root.update()
-        transcribe(self.filename) # Call transcribe
-        self.workinglabel.config(text="") # remove working label
-        self.pbar_det.stop() # Stop progress bar
-        self.pbar_det.pack_forget() # Remove progress bar
+        new_path = transcribe(self.filename)  # Call transcribe
+        self.workinglabel.config(text="")  # remove working label
+
+        wordcloud_create(self.filename)
+        stemmer_func(new_path)
+
+        self.pbar_det.stop()  # Stop progress bar
+        self.pbar_det.pack_forget()  # Remove progress bar
+
 
     # Search function
     def search(self):
