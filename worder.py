@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import random
 from wordcloud import WordCloud, STOPWORDS
 from os.path import basename
-import time
 
 
 def grey_color_func(word, font_size, position, orientation, random_state=None, **kwargs):
@@ -34,13 +33,8 @@ def wordcloud_create(filename):
     stopwords = stopwords.split()                                           #Splitting stopwords file into correct format
     stopwords = set(stopwords)                                              #Making the stopwords file a set
 
-    start_time = time.time()
-
     # # Wordcloud generation:
     wc = WordCloud(max_words=1000, mask=mask, stopwords=stopwords, margin=10, random_state=1).generate(text)
-
-    elapsed_time = time.time() - start_time
-    print elapsed_time
 
     # # For black/white wordcloud:
     plt.title("Wordcloud")
