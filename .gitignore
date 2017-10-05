@@ -1,3 +1,5 @@
 *.wav
 *.xml
 transcribed/
+*.pyc
+wordcloudTools/Wordcloud_result.png
