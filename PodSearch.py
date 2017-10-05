@@ -5,10 +5,8 @@ from os.path import basename
 from tkFileDialog import askopenfilename
 import ttk
 from transcriber import transcribe
-# from worder import wordcloud_create
+from worder import wordcloud_create
 from stemmer import stemmer_func
-#from removeoverlap import removerlap
-
 
 class PodSearch(object):
     '''This is the GUI class'''
@@ -67,18 +65,18 @@ class PodSearch(object):
         self.filename = askopenfilename()  # openfile dialog and put file in filename
         if not self.filename:  # leave method if cancel is clicked
             return
+        self.pathlabel.config(text=basename(self.filename))  # show filename as label
         if self.filename.endswith('.txt'):
             return
         self.workinglabel.config(text="WORKING", font=(
             "Helvetica", 20))  # Show WORKING when transcribing
         self.pbar_det.pack()  # show the progress bar
         self.pbar_det.start()  # Start the progress bar
-        self.pathlabel.config(text=basename(self.filename))  # show filename as label
         root.update()
         new_path = transcribe(self.filename)  # Call transcribe
         self.workinglabel.config(text="")  # remove working label
 
-        # wordcloud_create(self.filename)
+        wordcloud_create(self.filename)
         stemmer_func(new_path)
 
         self.pbar_det.stop()  # Stop progress bar
@@ -100,7 +98,6 @@ class PodSearch(object):
                 keyword = self.searchentry.get()  # Get entry from textbox
                 # Split transcription into words
                 words = transcription.split(' ')
-
                 # Find number of word
                 counter = 0
                 wordlabel = "Word number"
