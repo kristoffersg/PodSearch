@@ -7,6 +7,8 @@ import ttk
 from transcriber import transcribe
 from worder import wordcloud_create
 from stemmer import stemmer_func
+from PIL import ImageTk, Image
+
 
 
 class PodSearch(object):
@@ -17,7 +19,9 @@ class PodSearch(object):
     def __init__(self, master):
         '''Init of the GUI'''
         frame = Frame(master)
-        frame.pack()
+        frame.pack(side=LEFT)
+        worderFrame = Frame(master, width=250, height=250)
+        worderFrame.pack(side=LEFT)
 
         # Browse button
         self.browsebtn = Button(frame, text="Browse", command=self.browse)
@@ -28,16 +32,16 @@ class PodSearch(object):
         self.quitbtn.pack(side=LEFT)
 
         # Filepath label
-        self.pathlabel = Label(master)
+        self.pathlabel = Label(frame)
         self.pathlabel.pack()
 
         # Textbox
-        self.searchentry = Entry(master)
+        self.searchentry = Entry(frame)
         self.searchentry.pack()
         self.searchentry.bind('<Return>', lambda _: self.search())
 
         # Search button
-        self.searchbtn = Button(master, text="Search", command=self.search)
+        self.searchbtn = Button(frame, text="Search", command=self.search)
         self.searchbtn.pack()
 
         # Word label
@@ -55,6 +59,16 @@ class PodSearch(object):
         # Progress Bar
         self.pbar_det = ttk.Progressbar(
             orient="horizontal", length=400, mode="indeterminate")
+
+        # Wordcloud preparation
+        self.imageFile = "wordcloudTools/cloud.png"
+        self.imageFile = Image.open(self.imageFile)
+        self.image1 = self.imageFile.resize((250, 250), Image.ANTIALIAS)
+        self.image1 = ImageTk.PhotoImage(self.image1)
+
+        self.panel1 = Label(worderFrame, image=self.image1)
+        self.display = self.image1
+        self.panel1.pack(side=LEFT)     # fill=BOTH, expand=YES
 
     # Browse function
     def browse(self):
@@ -77,6 +91,7 @@ class PodSearch(object):
         self.workinglabel.config(text="")  # remove working label
 
         wordcloud_create(self.filename)
+        self.new_image()
         stemmer_func(new_path)
 
         self.pbar_det.stop()  # Stop progress bar
@@ -144,6 +159,14 @@ class PodSearch(object):
         timestamp = time1 + " - " + time2 + ", "
         return timestamp
 
+    def new_image(self):
+        self.imageFile2 = "wordcloudTools/Wordcloud_result.png"
+        self.imageFile2 = Image.open(self.imageFile2)
+        self.image2 = self.imageFile2.resize((250, 250), Image.ANTIALIAS)
+        self.image2 = ImageTk.PhotoImage(self.image2)
+        self.panel1.configure(image=self.image2)
+        print "Display image2"
+        self.display = self.image2
 
 root = Tk()
 b = PodSearch(root)
