@@ -41,7 +41,6 @@ class PodSearch(object):
         rightFrame.pack(side=RIGHT)
 
 
-
         # Browse button
         self.browsebtn = Button(leftSubFrame_top, text="Browse", command=self.browse)
         self.browsebtn.pack(side=LEFT)
@@ -80,7 +79,7 @@ class PodSearch(object):
             orient="horizontal", length=400, mode="indeterminate")
 
         # Wordcloud preparation
-        self.imageFile = "wordcloudTools/cloud.png"
+        self.imageFile = "wordcloudTools/black_background.png"
         self.imageFile = Image.open(self.imageFile)
         self.image1 = self.imageFile.resize((400, 400), Image.ANTIALIAS)
         self.image1 = ImageTk.PhotoImage(self.image1)
@@ -88,6 +87,7 @@ class PodSearch(object):
         self.panel1 = Label(rightFrame, image=self.image1)
         self.display = self.image1
         self.panel1.pack(side=TOP, fill=BOTH, expand=YES)
+
 
     # Browse function
     def browse(self):
@@ -109,9 +109,8 @@ class PodSearch(object):
         new_path = transcribe(self.filename)  # Call transcribe
         self.workinglabel.config(text="")  # remove working label
 
-        wordcloud_create(self.filename)
-        root.update()
-        self.new_image()
+        wordcloud_path = wordcloud_create(self.filename)
+        self.new_image(wordcloud_path)
         stemmer_func(new_path)
 
         self.pbar_det.stop()  # Stop progress bar
@@ -179,17 +178,15 @@ class PodSearch(object):
         timestamp = time1 + " - " + time2 + ", "
         return timestamp
 
-    def new_image(self):
-        self.imageFile2 = "wordcloudTools/Wordcloud_result.png"
-        self.imageFile2 = Image.open(self.imageFile2)
+    def new_image(self, path):
+        self.imageFile2 = Image.open(path)
         self.image2 = self.imageFile2.resize((400, 400), Image.ANTIALIAS)
         self.image2 = ImageTk.PhotoImage(self.image2)
         self.panel1.configure(image=self.image2)
-        print "Display image2"
         self.display = self.image2
 
 root = Tk()
 b = PodSearch(root)
 root.title("Podcast Searcher")
-root.geometry("650x450+150+200")
+root.geometry("650x500+150+200")
 root.mainloop()
