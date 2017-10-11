@@ -21,11 +21,17 @@ def removerlap(words):
                 correctwordsminus = " ".join(splitwords[::-1])
                 match = sq(None, correctwordsminus, wordsplus).find_longest_match(0, len(correctwordsminus), 0, len(wordsplus))
                 overlap = correctwordsminus + "" + wordsplus[match.b+match.size:]
-            temptrans = ""
-            removedwords = words[start: counter - 9]
-            temptrans += ' '.join(removedwords) + overlap
-            transcription += temptrans
-            start = counter
+            tempminus = ""
+            removedwordsminus = words[start: counter - 9]
+            tempminus += ' '.join(removedwordsminus) + ' ' + overlap
             # Remove the overlap in plus
+            tempplus = ""
+            hep = ' '.join(words)
+            tempremovetarget = "--".join(hep.split("--", 3)[:3])
+            removetarget = tempremovetarget.split()
+            removewordsplus = words[counter + 8:removetarget]
+            tempplus += ' '.join(removewordsplus)
+            start = counter            
+            transcription += tempminus + tempplus
     print transcription
-    return overlap
+    

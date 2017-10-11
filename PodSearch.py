@@ -7,6 +7,7 @@ import ttk
 from transcriber import transcribe
 from worder import wordcloud_create
 from stemmer import stemmer_func
+from removeoverlap import removerlap
 
 class PodSearch(object):
     '''This is the GUI class'''
@@ -98,6 +99,9 @@ class PodSearch(object):
                 keyword = self.searchentry.get()  # Get entry from textbox
                 # Split transcription into words
                 words = transcription.split(' ')
+
+                removerlap(words)
+
                 # Find number of word
                 counter = 0
                 wordlabel = "Word number"
