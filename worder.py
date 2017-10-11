@@ -37,9 +37,8 @@ def wordcloud_create(filename):
     wc = WordCloud(max_words=1000, mask=mask, stopwords=stopwords, margin=10, random_state=1).generate(text)
 
     # # For black/white wordcloud:
-    plt.title("Wordcloud")
-    plt.imshow(wc.recolor(color_func=grey_color_func, random_state=3), interpolation="bilinear")
-    # wc.recolor(color_func=grey_color_func, random_state=3)    # Necessary to recolor wc to greyscale, when not plotting
-    wc.to_file("wordcloudTools/Wordcloud_result.png")
-    plt.axis("off")
-    plt.show()
+    wc.recolor(color_func=grey_color_func, random_state=3)    # Necessary to recolor wc to greyscale, when not plotting
+    wordcloud_path = "wordcloudTools/Wordcloud_result.png"
+    wc.to_file(wordcloud_path)
+
+    return wordcloud_path

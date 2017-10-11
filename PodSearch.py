@@ -1,12 +1,13 @@
 #!/Users/ksg/miniconda2/bin/python2.7
 '''This module is the GUI and some functions'''
-from Tkinter import Tk, Button, Frame, Label, LEFT, Entry
+from Tkinter import *
 from os.path import basename
 from tkFileDialog import askopenfilename
 import ttk
 from transcriber import transcribe
 from worder import wordcloud_create
 from stemmer import stemmer_func
+from PIL import ImageTk, Image
 
 
 class PodSearch(object):
@@ -16,45 +17,77 @@ class PodSearch(object):
     # Initialization
     def __init__(self, master):
         '''Init of the GUI'''
-        frame = Frame(master)
-        frame.pack()
+        # Frame for progress bar
+        bottomFrame = Frame(master, highlightbackground = "green", highlightcolor = "green", highlightthickness = 1,
+                            width=500, height=200)
+        bottomFrame.pack(side=BOTTOM)
+
+        # Frame for buttons and entry
+        leftFrame = Frame(master, highlightbackground = "blue", highlightcolor = "blue", highlightthickness = 1,
+                          width=400, height=400)
+        leftFrame.pack(side=LEFT)
+
+        # Sub frame  for buttons
+        leftSubFrame_top = Frame(leftFrame, highlightbackground = "yellow", highlightcolor = "yellow", highlightthickness = 1)
+        leftSubFrame_top.pack(side=TOP)
+
+        # Sub frame for entry
+        leftSubFrame_bot = Frame(leftFrame, highlightbackground = "purple", highlightcolor = "purple", highlightthickness = 1)
+        leftSubFrame_bot.pack(side=BOTTOM)
+
+        # Frame for wordcloud
+        rightFrame = Frame(master, highlightbackground = "red", highlightcolor = "red", highlightthickness = 1,
+                           width=250, height=250)
+        rightFrame.pack(side=RIGHT)
+
 
         # Browse button
-        self.browsebtn = Button(frame, text="Browse", command=self.browse)
+        self.browsebtn = Button(leftSubFrame_top, text="Browse", command=self.browse)
         self.browsebtn.pack(side=LEFT)
 
         # Quit button
-        self.quitbtn = Button(frame, text="Quit", command=frame.quit)
+        self.quitbtn = Button(leftSubFrame_top, text="Quit", command=leftFrame.quit)
         self.quitbtn.pack(side=LEFT)
 
         # Filepath label
-        self.pathlabel = Label(master)
+        self.pathlabel = Label(leftSubFrame_bot, text="filename")
         self.pathlabel.pack()
 
         # Textbox
-        self.searchentry = Entry(master)
+        self.searchentry = Entry(leftSubFrame_bot)
         self.searchentry.pack()
         self.searchentry.bind('<Return>', lambda _: self.search())
 
         # Search button
-        self.searchbtn = Button(master, text="Search", command=self.search)
+        self.searchbtn = Button(leftSubFrame_bot, text="Search", command=self.search)
         self.searchbtn.pack()
 
         # Word label
-        self.wordlabel = Label(master)
+        self.wordlabel = Label(bottomFrame)
         self.wordlabel.pack()
 
         # Timestamp label
-        self.timestamplabel = Label(master)
+        self.timestamplabel = Label(bottomFrame)
         self.timestamplabel.pack()
 
         # Working Label
-        self.workinglabel = Label(master)
+        self.workinglabel = Label(bottomFrame)
         self.workinglabel.pack()
 
         # Progress Bar
-        self.pbar_det = ttk.Progressbar(
+        self.pbar_det = ttk.Progressbar(bottomFrame,
             orient="horizontal", length=400, mode="indeterminate")
+
+        # Wordcloud preparation
+        self.imageFile = "wordcloudTools/black_background.png"
+        self.imageFile = Image.open(self.imageFile)
+        self.image1 = self.imageFile.resize((400, 400), Image.ANTIALIAS)
+        self.image1 = ImageTk.PhotoImage(self.image1)
+
+        self.panel1 = Label(rightFrame, image=self.image1)
+        self.display = self.image1
+        self.panel1.pack(side=TOP, fill=BOTH, expand=YES)
+
 
     # Browse function
     def browse(self):
@@ -76,7 +109,8 @@ class PodSearch(object):
         new_path = transcribe(self.filename)  # Call transcribe
         self.workinglabel.config(text="")  # remove working label
 
-        wordcloud_create(self.filename)
+        wordcloud_path = wordcloud_create(self.filename)
+        self.new_image(wordcloud_path)
         stemmer_func(new_path)
 
         self.pbar_det.stop()  # Stop progress bar
@@ -144,9 +178,15 @@ class PodSearch(object):
         timestamp = time1 + " - " + time2 + ", "
         return timestamp
 
+    def new_image(self, path):
+        self.imageFile2 = Image.open(path)
+        self.image2 = self.imageFile2.resize((400, 400), Image.ANTIALIAS)
+        self.image2 = ImageTk.PhotoImage(self.image2)
+        self.panel1.configure(image=self.image2)
+        self.display = self.image2
 
 root = Tk()
 b = PodSearch(root)
 root.title("Podcast Searcher")
-root.geometry("500x200+150+200")
+root.geometry("650x500+150+200")
 root.mainloop()
