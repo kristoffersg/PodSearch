@@ -18,6 +18,7 @@ def removerlap(words):
                 wordsplus += " " + _
             for _ in words[counter - 2:counter - 10 : -1]:
                 wordsminus += " " + _
+            # Merge overlap
             if wordsminus != "":
                 splitwords = wordsminus.split()
                 correctwordsminus = " ".join(splitwords[::-1])
@@ -28,11 +29,10 @@ def removerlap(words):
             tempminus += ' '.join(removedwordsminus) + ' ' + overlap
             # Remove the overlap in plus
             tempplus = ""
-            hep = ' '.join(words)
-            tempremovetarget = "--".join(hep.split("--", cnt)[:cnt])
-            removetarget = tempremovetarget.split()
-            removewordsplus = words[counter + 8:removetarget]
-            tempplus += ' '.join(removewordsplus)
+            hep = ' '.join(words[counter + 8:])
+            tempplus = hep.split('--', 1)[0]
+            # removetarget = tempremovetarget.split()
+            # tempplus += ' '.join(removetarget)
             start = counter            
             transcription += tempminus + tempplus
     print transcription
