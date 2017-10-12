@@ -5,6 +5,7 @@ from difflib import SequenceMatcher as sq
 def removerlap(words):
     '''Removal of overlap'''
     counter = 1
+    cnt = 1
     start = counter
     transcription = ""
     for _ in words[1:len(words)-1]:
@@ -12,6 +13,7 @@ def removerlap(words):
         if _ == "--":
             wordsplus = ""
             wordsminus = ""
+            cnt = cnt + 1
             for _ in words[counter:counter + 8]:
                 wordsplus += " " + _
             for _ in words[counter - 2:counter - 10 : -1]:
@@ -27,7 +29,7 @@ def removerlap(words):
             # Remove the overlap in plus
             tempplus = ""
             hep = ' '.join(words)
-            tempremovetarget = "--".join(hep.split("--", 3)[:3])
+            tempremovetarget = "--".join(hep.split("--", cnt)[:cnt])
             removetarget = tempremovetarget.split()
             removewordsplus = words[counter + 8:removetarget]
             tempplus += ' '.join(removewordsplus)

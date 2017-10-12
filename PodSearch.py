@@ -5,7 +5,7 @@ from os.path import basename
 from tkFileDialog import askopenfilename
 import ttk
 from transcriber import transcribe
-from worder import wordcloud_create
+# from worder import wordcloud_create
 from stemmer import stemmer_func
 from removeoverlap import removerlap
 
@@ -77,7 +77,7 @@ class PodSearch(object):
         new_path = transcribe(self.filename)  # Call transcribe
         self.workinglabel.config(text="")  # remove working label
 
-        wordcloud_create(self.filename)
+        # wordcloud_create(self.filename)
         stemmer_func(new_path)
 
         self.pbar_det.stop()  # Stop progress bar
