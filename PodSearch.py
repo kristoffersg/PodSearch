@@ -1,6 +1,6 @@
 #!/Users/ksg/miniconda2/bin/python2.7
 '''This module is the GUI and some functions'''
-from Tkinter import *
+from Tkinter import Tk, Button, Frame, Label, LEFT, RIGHT, BOTTOM, TOP, BOTH, YES, Entry
 from os.path import basename
 from tkFileDialog import askopenfilename
 import ttk
@@ -8,6 +8,7 @@ from transcriber import transcribe
 from worder import wordcloud_create
 from stemmer import stemmer_func
 from PIL import ImageTk, Image
+from removeoverlap import removerlap
 
 
 class PodSearch(object):
@@ -18,73 +19,73 @@ class PodSearch(object):
     def __init__(self, master):
         '''Init of the GUI'''
         # Frame for progress bar
-        bottomFrame = Frame(master, highlightbackground = "green", highlightcolor = "green", highlightthickness = 1,
+        self.bottomframe = Frame(master, highlightbackground="green", highlightcolor="green", highlightthickness=1,
                             width=500, height=200)
-        bottomFrame.pack(side=BOTTOM)
+        self.bottomframe.pack(side=BOTTOM)
 
         # Frame for buttons and entry
-        leftFrame = Frame(master, highlightbackground = "blue", highlightcolor = "blue", highlightthickness = 1,
+        self.leftframe = Frame(master, highlightbackground="blue", highlightcolor="blue", highlightthickness=1,
                           width=400, height=400)
-        leftFrame.pack(side=LEFT)
+        self.leftframe.pack(side=LEFT)
 
         # Sub frame  for buttons
-        leftSubFrame_top = Frame(leftFrame, highlightbackground = "yellow", highlightcolor = "yellow", highlightthickness = 1)
-        leftSubFrame_top.pack(side=TOP)
+        self.leftsubframe_top = Frame(self.leftframe, highlightbackground="yellow", highlightcolor="yellow", highlightthickness=1)
+        self.leftsubframe_top.pack(side=TOP)
 
         # Sub frame for entry
-        leftSubFrame_bot = Frame(leftFrame, highlightbackground = "purple", highlightcolor = "purple", highlightthickness = 1)
-        leftSubFrame_bot.pack(side=BOTTOM)
+        self.leftsubframe_bot = Frame(self.leftframe, highlightbackground="purple", highlightcolor="purple", highlightthickness=1)
+        self.leftsubframe_bot.pack(side=BOTTOM)
 
         # Frame for wordcloud
-        rightFrame = Frame(master, highlightbackground = "red", highlightcolor = "red", highlightthickness = 1,
+        rightframe = Frame(master, highlightbackground="red", highlightcolor="red", highlightthickness=1,
                            width=250, height=250)
-        rightFrame.pack(side=RIGHT)
+        rightframe.pack(side=RIGHT)
 
 
         # Browse button
-        self.browsebtn = Button(leftSubFrame_top, text="Browse", command=self.browse)
+        self.browsebtn = Button(self.leftsubframe_top, text="Browse", command=self.browse)
         self.browsebtn.pack(side=LEFT)
 
         # Quit button
-        self.quitbtn = Button(leftSubFrame_top, text="Quit", command=leftFrame.quit)
+        self.quitbtn = Button(self.leftsubframe_top, text="Quit", command=self.leftframe.quit)
         self.quitbtn.pack(side=LEFT)
 
         # Filepath label
-        self.pathlabel = Label(leftSubFrame_bot, text="filename")
+        self.pathlabel = Label(self.leftsubframe_bot, text="filename")
         self.pathlabel.pack()
 
         # Textbox
-        self.searchentry = Entry(leftSubFrame_bot)
+        self.searchentry = Entry(self.leftsubframe_bot)
         self.searchentry.pack()
         self.searchentry.bind('<Return>', lambda _: self.search())
 
         # Search button
-        self.searchbtn = Button(leftSubFrame_bot, text="Search", command=self.search)
+        self.searchbtn = Button(self.leftsubframe_bot, text="Search", command=self.search)
         self.searchbtn.pack()
 
         # Word label
-        self.wordlabel = Label(bottomFrame)
+        self.wordlabel = Label(self.bottomframe)
         self.wordlabel.pack()
 
         # Timestamp label
-        self.timestamplabel = Label(bottomFrame)
+        self.timestamplabel = Label(self.bottomframe)
         self.timestamplabel.pack()
 
         # Working Label
-        self.workinglabel = Label(bottomFrame)
+        self.workinglabel = Label(self.bottomframe)
         self.workinglabel.pack()
 
         # Progress Bar
-        self.pbar_det = ttk.Progressbar(bottomFrame,
+        self.pbar_det = ttk.Progressbar(self.bottomframe,
             orient="horizontal", length=400, mode="indeterminate")
 
         # Wordcloud preparation
-        self.imageFile = "wordcloudTools/black_background.png"
-        self.imageFile = Image.open(self.imageFile)
-        self.image1 = self.imageFile.resize((400, 400), Image.ANTIALIAS)
+        self.imagefile = "wordcloudTools/black_background.png"
+        self.imagefile = Image.open(self.imagefile)
+        self.image1 = self.imagefile.resize((400, 400), Image.ANTIALIAS)
         self.image1 = ImageTk.PhotoImage(self.image1)
 
-        self.panel1 = Label(rightFrame, image=self.image1)
+        self.panel1 = Label(rightframe, image=self.image1)
         self.display = self.image1
         self.panel1.pack(side=TOP, fill=BOTH, expand=YES)
 
@@ -99,12 +100,13 @@ class PodSearch(object):
         self.filename = askopenfilename()  # openfile dialog and put file in filename
         if not self.filename:  # leave method if cancel is clicked
             return
+        self.pathlabel.config(text=basename(self.filename))  # show filename as label
+        if self.filename.endswith('.txt'):
+            return
         self.workinglabel.config(text="WORKING", font=(
             "Helvetica", 20))  # Show WORKING when transcribing
         self.pbar_det.pack()  # show the progress bar
         self.pbar_det.start()  # Start the progress bar
-        self.pathlabel.config(text=basename(self.filename)
-                              )  # show filename as label
         root.update()
         new_path = transcribe(self.filename)  # Call transcribe
         self.workinglabel.config(text="")  # remove working label
@@ -121,8 +123,7 @@ class PodSearch(object):
     def search(self):
         '''Search in transcription'''
         # Open transcription
-        wavepath = basename(self.filename)
-        trans = wavepath.replace(".wav", ".txt")
+        trans = basename(self.filename).replace(".wav", ".txt")
 
         if not trans == '':
             if not self.searchentry.get() == '':
@@ -130,11 +131,11 @@ class PodSearch(object):
                     transcription = fn.read().replace('\n', '')
 
                 keyword = self.searchentry.get()  # Get entry from textbox
-                # Split transcription into words
-                words = transcription.split(' ')
+                nooverlapstring = removerlap(transcription.split(' '))  # Call removerlap function
+                words = nooverlapstring.split(' ')  # Splits new transcription into words list
 
                 # Find number of word
-                counter = 0
+                counter = 1
                 wordlabel = "Word number"
                 timestamplabel = ""
                 shift = 0
@@ -165,12 +166,13 @@ class PodSearch(object):
 
     def maptoaudio(self, counter):
         '''Where in audio is result'''
-        seconds1 = (counter - 1) * 12  # Calc interval start
+        seconds1 = (counter - 1) * 14  # Calc interval start
         minutes, seconds = divmod(seconds1, 60)  # Format to hh:mm:ss
         hours, minutes = divmod(minutes, 60)
         time1 = "%d:%02d:%02d" % (hours, minutes, seconds)
 
-        seconds2 = (counter - 1) * 12 + 14  # Calc interval end
+        n = 14 if counter == 1 else 12
+        seconds2 = (counter - 1) * 14 + n  # Calc interval end
         minutes, seconds = divmod(seconds2, 60)  # Format to hh:mm:ss
         hours, minutes = divmod(minutes, 60)
         time2 = "%d:%02d:%02d" % (hours, minutes, seconds)
@@ -179,8 +181,8 @@ class PodSearch(object):
         return timestamp
 
     def new_image(self, path):
-        self.imageFile2 = Image.open(path)
-        self.image2 = self.imageFile2.resize((400, 400), Image.ANTIALIAS)
+        self.imagefile2 = Image.open(path)
+        self.image2 = self.imagefile2.resize((400, 400), Image.ANTIALIAS)
         self.image2 = ImageTk.PhotoImage(self.image2)
         self.panel1.configure(image=self.image2)
         self.display = self.image2
