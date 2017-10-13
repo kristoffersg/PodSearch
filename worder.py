@@ -3,7 +3,6 @@
 import numpy as np
 from PIL import Image
 from os import path
-import matplotlib.pyplot as plt
 import random
 from wordcloud import WordCloud, STOPWORDS
 from os.path import basename
@@ -23,7 +22,7 @@ def wordcloud_create(filename):
     # # Read the mask image
     # taken from
     # https://commons.wikimedia.org/wiki/File:Cloud_font_awesome.svg
-    mask = np.array(Image.open(path.join(d, "wordcloudTools\cloud.png")))
+    mask = np.array(Image.open(path.join(d, "wordcloudTools/cloud.png")))
 
     # # Load transcribed txt file:
     text = open(path.join(d, "transcribed/" + input_)).read()
