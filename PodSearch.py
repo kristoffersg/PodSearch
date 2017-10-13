@@ -9,6 +9,7 @@ from worder import wordcloud_create
 from stemmer import stemmer_func
 from PIL import ImageTk, Image
 from removeoverlap import removerlap
+from estimatetime import estimate
 
 
 class PodSearch(object):
@@ -20,12 +21,12 @@ class PodSearch(object):
         '''Init of the GUI'''
         # Frame for progress bar
         self.bottomframe = Frame(master, highlightbackground="green", highlightcolor="green", highlightthickness=1,
-                            width=500, height=200)
+                                 width=500, height=200)
         self.bottomframe.pack(side=BOTTOM)
 
         # Frame for buttons and entry
         self.leftframe = Frame(master, highlightbackground="blue", highlightcolor="blue", highlightthickness=1,
-                          width=400, height=400)
+                               width=400, height=400)
         self.leftframe.pack(side=LEFT)
 
         # Sub frame  for buttons
@@ -77,7 +78,7 @@ class PodSearch(object):
 
         # Progress Bar
         self.pbar_det = ttk.Progressbar(self.bottomframe,
-            orient="horizontal", length=400, mode="indeterminate")
+                                        orient="horizontal", length=400, mode="indeterminate")
 
         # Wordcloud preparation
         self.imagefile = "wordcloudTools/black_background.png"
@@ -135,20 +136,7 @@ class PodSearch(object):
                 words = nooverlapstring.split(' ')  # Splits new transcription into words list
 
                 # Find number of word
-                counter = 1
-                wordlabel = "Word number"
-                timestamplabel = ""
-                shift = 0
-                for i, _ in enumerate(words):
-                    if _ == "--":
-                        counter = counter + 1
-                        shift = i
-                    if keyword.lower() in _.lower():
-                        totalwordpos = i + 1
-                        wpsplit = totalwordpos - shift
-                        wordlabel += " " + str(wpsplit) + ","
-
-                        timestamplabel += self.maptoaudio(counter)
+                timestamplabel, wordlabel = estimate(words, keyword)
 
                 # Write result to label
                 if wordlabel != "Word number":
@@ -181,6 +169,7 @@ class PodSearch(object):
         return timestamp
 
     def new_image(self, path):
+        '''create image'''
         self.imagefile2 = Image.open(path)
         self.image2 = self.imagefile2.resize((400, 400), Image.ANTIALIAS)
         self.image2 = ImageTk.PhotoImage(self.image2)
