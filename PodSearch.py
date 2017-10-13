@@ -5,7 +5,7 @@ from os.path import basename
 from tkFileDialog import askopenfilename
 import ttk
 from transcriber import transcribe
-# from worder import wordcloud_create
+from worder import wordcloud_create
 from stemmer import stemmer_func
 from removeoverlap import removerlap
 
@@ -77,7 +77,7 @@ class PodSearch(object):
         new_path = transcribe(self.filename)  # Call transcribe
         self.workinglabel.config(text="")  # remove working label
 
-        # wordcloud_create(self.filename)
+        wordcloud_create(self.filename)
         stemmer_func(new_path)
 
         self.pbar_det.stop()  # Stop progress bar
@@ -97,17 +97,16 @@ class PodSearch(object):
                     transcription = fn.read().replace('\n', '')
 
                 keyword = self.searchentry.get()  # Get entry from textbox
-                # Split transcription into words
-                words = transcription.split(' ')
-
-                removerlap(words)
+                words = transcription.split(' ')  # Split transcription into words
+                nooverlapstring = removerlap(words)  # Call removerlap function
+                nooverlap = nooverlapstring.split(' ')  # Splits new transcription into words list
 
                 # Find number of word
-                counter = 0
+                counter = 1
                 wordlabel = "Word number"
                 timestamplabel = ""
                 shift = 0
-                for i, _ in enumerate(words):
+                for i, _ in enumerate(nooverlap):
                     if _ == "--":
                         counter = counter + 1
                         shift = i
@@ -134,12 +133,13 @@ class PodSearch(object):
 
     def maptoaudio(self, counter):
         '''Where in audio is result'''
-        seconds1 = (counter - 1) * 12  # Calc interval start
+        seconds1 = (counter - 1) * 14  # Calc interval start
         minutes, seconds = divmod(seconds1, 60)  # Format to hh:mm:ss
         hours, minutes = divmod(minutes, 60)
         time1 = "%d:%02d:%02d" % (hours, minutes, seconds)
 
-        seconds2 = (counter - 1) * 12 + 14  # Calc interval end
+        n = 14 if counter == 1 else 12
+        seconds2 = (counter - 1) * 14 + n  # Calc interval end
         minutes, seconds = divmod(seconds2, 60)  # Format to hh:mm:ss
         hours, minutes = divmod(minutes, 60)
         time2 = "%d:%02d:%02d" % (hours, minutes, seconds)
