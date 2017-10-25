@@ -20,26 +20,28 @@ class PodSearch(object):
     def __init__(self, master):
         '''Init of the GUI'''
         # Frame for progress bar
-        self.bottomframe = Frame(master, highlightbackground="green", highlightcolor="green", highlightthickness=1,
-                            width=500, height=200)
+        self.bottomframe = Frame(master, highlightbackground="green", highlightcolor="green",
+                                 highlightthickness=1, width=500, height=200)
         self.bottomframe.pack(side=BOTTOM)
 
         # Frame for buttons and entry
-        self.leftframe = Frame(master, highlightbackground="blue", highlightcolor="blue", highlightthickness=1,
-                          width=400, height=400)
+        self.leftframe = Frame(master, highlightbackground="blue", highlightcolor="blue",
+                               highlightthickness=1, width=400, height=400)
         self.leftframe.pack(side=LEFT)
 
         # Sub frame  for buttons
-        self.leftsubframe_top = Frame(self.leftframe, highlightbackground="yellow", highlightcolor="yellow", highlightthickness=1)
+        self.leftsubframe_top = Frame(self.leftframe, highlightbackground="yellow",
+                                      highlightcolor="yellow", highlightthickness=1)
         self.leftsubframe_top.pack(side=TOP)
 
         # Sub frame for entry
-        self.leftsubframe_bot = Frame(self.leftframe, highlightbackground="purple", highlightcolor="purple", highlightthickness=1)
+        self.leftsubframe_bot = Frame(self.leftframe, highlightbackground="purple",
+                                      highlightcolor="purple", highlightthickness=1)
         self.leftsubframe_bot.pack(side=BOTTOM)
 
         # Frame for wordcloud
-        rightframe = Frame(master, highlightbackground="red", highlightcolor="red", highlightthickness=1,
-                           width=250, height=250)
+        rightframe = Frame(master, highlightbackground="red", highlightcolor="red",
+                           highlightthickness=1, width=250, height=250)
         rightframe.pack(side=RIGHT)
 
 
@@ -77,8 +79,8 @@ class PodSearch(object):
         self.workinglabel.pack()
 
         # Progress Bar
-        self.pbar_det = ttk.Progressbar(self.bottomframe,
-            orient="horizontal", length=400, mode="indeterminate")
+        self.pbar_det = ttk.Progressbar(self.bottomframe, orient="horizontal", length=400,
+                                        mode="indeterminate")
 
         # Wordcloud preparation
         self.imagefile = "wordcloudTools/black_background.png"
@@ -153,6 +155,7 @@ class PodSearch(object):
             self.wordlabel.config(text="No file selected")
 
     def new_image(self, path):
+        '''Word Cloud image'''
         self.imagefile2 = Image.open(path)
         self.image2 = self.imagefile2.resize((400, 400), Image.ANTIALIAS)
         self.image2 = ImageTk.PhotoImage(self.image2)
