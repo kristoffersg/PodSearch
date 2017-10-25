@@ -9,6 +9,7 @@ from worder import wordcloud_create
 from stemmer import stemmer_func
 from PIL import ImageTk, Image
 from removeoverlap import removerlap
+from estimation import estimate
 
 
 class PodSearch(object):
@@ -134,21 +135,8 @@ class PodSearch(object):
                 nooverlapstring = removerlap(transcription.split(' '))  # Call removerlap function
                 words = nooverlapstring.split(' ')  # Splits new transcription into words list
 
-                # Find number of word
-                counter = 1
-                wordlabel = "Word number"
-                timestamplabel = ""
-                shift = 0
-                for i, _ in enumerate(words):
-                    if _ == "--":
-                        counter = counter + 1
-                        shift = i
-                    if keyword.lower() in _.lower():
-                        totalwordpos = i + 1
-                        wpsplit = totalwordpos - shift
-                        wordlabel += " " + str(wpsplit) + ","
-
-                        timestamplabel += self.maptoaudio(counter)
+                # Find word number and time interval
+                wordlabel, timestamplabel = estimate(words, keyword)
 
                 # Write result to label
                 if wordlabel != "Word number":
@@ -163,22 +151,6 @@ class PodSearch(object):
 
         else:
             self.wordlabel.config(text="No file selected")
-
-    def maptoaudio(self, counter):
-        '''Where in audio is result'''
-        seconds1 = (counter - 1) * 14  # Calc interval start
-        minutes, seconds = divmod(seconds1, 60)  # Format to hh:mm:ss
-        hours, minutes = divmod(minutes, 60)
-        time1 = "%d:%02d:%02d" % (hours, minutes, seconds)
-
-        n = 14 if counter == 1 else 12
-        seconds2 = (counter - 1) * 14 + n  # Calc interval end
-        minutes, seconds = divmod(seconds2, 60)  # Format to hh:mm:ss
-        hours, minutes = divmod(minutes, 60)
-        time2 = "%d:%02d:%02d" % (hours, minutes, seconds)
-
-        timestamp = time1 + " - " + time2 + ", "
-        return timestamp
 
     def new_image(self, path):
         self.imagefile2 = Image.open(path)
