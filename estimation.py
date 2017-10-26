@@ -3,32 +3,36 @@
 from decimal import Decimal
 
 def findword(words, keyword):
-    '''Find word number, interval and estimation'''
+    '''Takes: List of words and keyword
+    Returns: Word number, interval and estimation'''
+    # Initialization of variables
     counter = 1
     wordlabel = "Word number"
     timeintervallabel = ""
     shift = 0
     time = "Estimated at "
     for i, _ in enumerate(words):
-        if _ == "--":
+        if _ == "--":  # counts the intervals
             counter = counter + 1
             shift = i
-        if keyword.lower() in _.lower():
-            totalwordpos = i + 1
-            wpsplit = totalwordpos - shift
-            wordlabel += " " + str(wpsplit) + ","
-            timeintervallabel += calcinterval(counter)
-            for k, _ in enumerate(words[totalwordpos:]):
+        if keyword.lower() in _.lower():  # Compare keyword to word
+            totalwordpos = i + 1  # position of word in transcription
+            wpsplit = totalwordpos - shift  # Position of word in interval
+            wordlabel += " " + str(wpsplit) + ","  # Make label with position
+            timeintervallabel += calcinterval(counter)  # Make label with interval
+            for k, _ in enumerate(words[totalwordpos:]):  # Find position of interval end
                 if _ == "--":
                     wordinterval = totalwordpos + k - shift
                     break
-            if counter == 1:
+            if counter == 1:  # If first interval it is 14 seconds
                 decimal = Decimal(wpsplit)/Decimal(wordinterval) * 14
-            else:
+            else:  # every other interval is 12
                 decimal = Decimal(wpsplit)/Decimal(wordinterval) * 12
+            # make label of estimation
             totalseconds = str(round(firsttimestamp(counter) + decimal, 2))
             head, tail = totalseconds.split('.')
             time += str(formattime(int(head)) + "." + tail) + ", "
+    # Removes ', ' in the end of the labels
     if wordlabel.endswith(','):
         wordlabel = wordlabel[:-1]
         wordlabel += ' in interval'
@@ -37,7 +41,8 @@ def findword(words, keyword):
     return (wordlabel, time, timeintervallabel)
 
 def calcinterval(counter):
-    '''Where in audio is result'''
+    '''Takes: Interval counter
+    Returns: Which interval result is in'''
     seconds1 = (counter - 1) * 14  # Calc interval start
     time1 = formattime(seconds1)  # Format to hh:mm:ss
 
@@ -49,12 +54,14 @@ def calcinterval(counter):
     return timestamp
 
 def firsttimestamp(counter):
-    '''returns seconds on beginning of interval'''
+    '''Takes: interval counter
+    Returns: Beginning second of interval'''
     seconds = (counter - 1) * 14
     return seconds
 
 def formattime(seconds):
-    '''format seconds to hh:mm:ss'''
+    '''Takes: Seconds
+    Returns: Seconds in hh:mm:ss'''
     minutes, seconds = divmod(seconds, 60)
     hours, minutes = divmod(minutes, 60)
     time = "%d:%02d:%02d" % (hours, minutes, seconds)
