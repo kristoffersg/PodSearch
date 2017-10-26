@@ -104,6 +104,7 @@ class PodSearch(object):
             self.wordlabel.config(text="")
             self.pathlabel.config(text="")
             self.timestamplabel.config(text="")
+            self.estimatelabel.config(text="")
         self.filename = askopenfilename()  # openfile dialog and put file in filename
         if not self.filename:  # leave method if cancel is clicked
             return
