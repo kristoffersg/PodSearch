@@ -74,6 +74,10 @@ class PodSearch(object):
         self.timestamplabel = Label(self.bottomframe)
         self.timestamplabel.pack()
 
+        # estimate label
+        self.estimatelabel = Label(self.bottomframe)
+        self.estimatelabel.pack()
+
         # Working Label
         self.workinglabel = Label(self.bottomframe)
         self.workinglabel.pack()
@@ -138,12 +142,12 @@ class PodSearch(object):
                 words = nooverlapstring.split(' ')  # Splits new transcription into words list
 
                 # Find word number and time interval
-                wordlabel, timestamplabel = estimate(words, keyword)
-
+                wordlabel, time, timestamplabel = estimate(words, keyword)
+                #timestamplabel = time
                 # Write result to label
                 if wordlabel != "Word number":
                     self.wordlabel.config(text=wordlabel)
-
+                    self.estimatelabel.config(text=time)
                     self.timestamplabel.config(text=timestamplabel)
                 else:
                     self.wordlabel.config(text="Word not found")
@@ -152,7 +156,7 @@ class PodSearch(object):
                 self.wordlabel.config(text="Enter word in search field")
 
         else:
-            self.wordlabel.config(text="No file selected")
+            self.timestamplabel.config(text="No file selected")
 
     def new_image(self, path):
         '''Word Cloud image'''
@@ -165,5 +169,5 @@ class PodSearch(object):
 root = Tk()
 b = PodSearch(root)
 root.title("Podcast Searcher")
-root.geometry("650x500+150+200")
+root.geometry("650x500+0+200")
 root.mainloop()
