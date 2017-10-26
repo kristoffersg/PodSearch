@@ -9,7 +9,7 @@ from worder import wordcloud_create
 from stemmer import stemmer_func
 from PIL import ImageTk, Image
 from removeoverlap import removerlap
-from estimation import estimate
+from estimation import findword
 
 
 class PodSearch(object):
@@ -134,15 +134,15 @@ class PodSearch(object):
 
         if not trans == '':
             if not self.searchentry.get() == '':
-                with open('transcribed/' + trans, 'r') as fn:  # Open transcribed file
-                    transcription = fn.read().replace('\n', '')
+                with open('transcribed/' + trans, 'r') as filen:  # Open transcribed file
+                    transcription = filen.read().replace('\n', '')
 
                 keyword = self.searchentry.get()  # Get entry from textbox
                 nooverlapstring = removerlap(transcription.split(' '))  # Call removerlap function
                 words = nooverlapstring.split(' ')  # Splits new transcription into words list
 
                 # Find word number and time interval
-                wordlabel, time, timestamplabel = estimate(words, keyword)
+                wordlabel, time, timestamplabel = findword(words, keyword)
                 #timestamplabel = time
                 # Write result to label
                 if wordlabel != "Word number":
