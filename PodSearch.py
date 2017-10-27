@@ -10,13 +10,16 @@ from stemmer import stemmer_func
 from PIL import ImageTk, Image
 from removeoverlap import removerlap
 from estimation import findword
+from audioduration import *
 
 
 class PodSearch(object):
     '''This is the GUI class'''
+
+    # Initialization of variables
     filename = ""
 
-    # Initialization
+    # Initialization of GUI
     def __init__(self, master):
         '''Init of the GUI'''
         # Frame for progress bar
@@ -96,6 +99,9 @@ class PodSearch(object):
         self.display = self.image1
         self.panel1.pack(side=TOP, fill=BOTH, expand=YES)
 
+        self.duration = 0
+
+
 
     # Browse function
     def browse(self):
@@ -111,6 +117,7 @@ class PodSearch(object):
         self.pathlabel.config(text=basename(self.filename))  # show filename as label
         if self.filename.endswith('.txt'):
             return
+        self.duration = findduration(self.filename)
         self.workinglabel.config(text="WORKING", font=(
             "Helvetica", 20))  # Show WORKING when transcribing
         self.pbar_det.pack()  # show the progress bar
@@ -143,8 +150,8 @@ class PodSearch(object):
                 words = nooverlapstring.split(' ')  # Splits new transcription into words list
 
                 # Find word number and time interval
-                wordlabel, time, timestamplabel = findword(words, keyword)
-                #timestamplabel = time
+                wordlabel, time, timestamplabel = findword(words, keyword, self.duration)
+
                 # Write result to label
                 if wordlabel != "Word number":
                     self.wordlabel.config(text=wordlabel)

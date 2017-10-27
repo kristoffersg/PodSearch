@@ -2,8 +2,8 @@
 '''Find word number, time in interval and interval'''
 from decimal import Decimal
 
-def findword(words, keyword):
-    '''Takes: List of words and keyword
+def findword(words, keyword, duration):
+    '''Takes: List of words, keyword and duration of .wav file in seconds
     Returns: Word number, interval and estimation'''
     # Initialization of variables
     counter = 1
@@ -19,7 +19,7 @@ def findword(words, keyword):
             totalwordpos = i + 1  # position of word in transcription
             wpsplit = totalwordpos - shift  # Position of word in interval
             wordlabel += " " + str(wpsplit) + ","  # Make label with position
-            timeintervallabel += calcinterval(counter)  # Make label with interval
+            timeintervallabel += calcinterval(counter, duration)  # Make label with interval
             for k, _ in enumerate(words[totalwordpos:]):  # Find position of interval end
                 if _ == "--":
                     wordinterval = totalwordpos + k - shift
@@ -31,8 +31,9 @@ def findword(words, keyword):
             # make label of estimation
             totalseconds = str(round(firsttimestamp(counter) + decimal, 2))
             head, tail = totalseconds.split('.')
-            time += str(formattime(int(head)) + "." + tail) + ", "
-    # Removes ', ' in the end of the labels
+            time += str(formattime(int(head)) + "." + tail) + ', '
+
+    # Removes ", "" in the end of the labels
     if wordlabel.endswith(','):
         wordlabel = wordlabel[:-1]
         wordlabel += ' in interval'
@@ -40,7 +41,7 @@ def findword(words, keyword):
         time = time[:-2]
     return (wordlabel, time, timeintervallabel)
 
-def calcinterval(counter):
+def calcinterval(counter, duration):
     '''Takes: Interval counter
     Returns: Which interval result is in'''
     seconds1 = (counter - 1) * 14  # Calc interval start
@@ -48,6 +49,8 @@ def calcinterval(counter):
 
     number = 14 if counter == 1 else 12
     seconds2 = (counter - 1) * 14 + number  # Calc interval end
+    if seconds2 > duration:
+        seconds2 = duration
     time2 = formattime(seconds2)  # Format to hh:mm:ss
 
     timestamp = time1 + " - " + time2 + ", "
