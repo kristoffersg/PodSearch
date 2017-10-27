@@ -9,36 +9,42 @@ from worder import wordcloud_create
 from stemmer import stemmer_func
 from PIL import ImageTk, Image
 from removeoverlap import removerlap
+from estimation import findword
+from audioduration import *
 
 
 class PodSearch(object):
     '''This is the GUI class'''
+
+    # Initialization of variables
     filename = ""
 
-    # Initialization
+    # Initialization of GUI
     def __init__(self, master):
         '''Init of the GUI'''
         # Frame for progress bar
-        self.bottomframe = Frame(master, highlightbackground="green", highlightcolor="green", highlightthickness=1,
-                            width=500, height=200)
+        self.bottomframe = Frame(master, highlightbackground="green", highlightcolor="green",
+                                 highlightthickness=1, width=500, height=200)
         self.bottomframe.pack(side=BOTTOM)
 
         # Frame for buttons and entry
-        self.leftframe = Frame(master, highlightbackground="blue", highlightcolor="blue", highlightthickness=1,
-                          width=400, height=400)
+        self.leftframe = Frame(master, highlightbackground="blue", highlightcolor="blue",
+                               highlightthickness=1, width=400, height=400)
         self.leftframe.pack(side=LEFT)
 
         # Sub frame  for buttons
-        self.leftsubframe_top = Frame(self.leftframe, highlightbackground="yellow", highlightcolor="yellow", highlightthickness=1)
+        self.leftsubframe_top = Frame(self.leftframe, highlightbackground="yellow",
+                                      highlightcolor="yellow", highlightthickness=1)
         self.leftsubframe_top.pack(side=TOP)
 
         # Sub frame for entry
-        self.leftsubframe_bot = Frame(self.leftframe, highlightbackground="purple", highlightcolor="purple", highlightthickness=1)
+        self.leftsubframe_bot = Frame(self.leftframe, highlightbackground="purple",
+                                      highlightcolor="purple", highlightthickness=1)
         self.leftsubframe_bot.pack(side=BOTTOM)
 
         # Frame for wordcloud
-        rightframe = Frame(master, highlightbackground="red", highlightcolor="red", highlightthickness=1,
-                           width=250, height=250)
+        rightframe = Frame(master, highlightbackground="red", highlightcolor="red",
+                           highlightthickness=1, width=250, height=250)
         rightframe.pack(side=RIGHT)
 
 
@@ -71,13 +77,17 @@ class PodSearch(object):
         self.timestamplabel = Label(self.bottomframe)
         self.timestamplabel.pack()
 
+        # estimate label
+        self.estimatelabel = Label(self.bottomframe)
+        self.estimatelabel.pack()
+
         # Working Label
         self.workinglabel = Label(self.bottomframe)
         self.workinglabel.pack()
 
         # Progress Bar
-        self.pbar_det = ttk.Progressbar(self.bottomframe,
-            orient="horizontal", length=400, mode="indeterminate")
+        self.pbar_det = ttk.Progressbar(self.bottomframe, orient="horizontal", length=400,
+                                        mode="indeterminate")
 
         # Wordcloud preparation
         self.imagefile = "wordcloudTools/black_background.png"
@@ -89,6 +99,9 @@ class PodSearch(object):
         self.display = self.image1
         self.panel1.pack(side=TOP, fill=BOTH, expand=YES)
 
+        self.duration = 0
+
+
 
     # Browse function
     def browse(self):
@@ -97,12 +110,14 @@ class PodSearch(object):
             self.wordlabel.config(text="")
             self.pathlabel.config(text="")
             self.timestamplabel.config(text="")
+            self.estimatelabel.config(text="")
         self.filename = askopenfilename()  # openfile dialog and put file in filename
         if not self.filename:  # leave method if cancel is clicked
             return
         self.pathlabel.config(text=basename(self.filename))  # show filename as label
         if self.filename.endswith('.txt'):
             return
+        self.duration = findduration(self.filename)
         self.workinglabel.config(text="WORKING", font=(
             "Helvetica", 20))  # Show WORKING when transcribing
         self.pbar_det.pack()  # show the progress bar
@@ -127,33 +142,20 @@ class PodSearch(object):
 
         if not trans == '':
             if not self.searchentry.get() == '':
-                with open('transcribed/' + trans, 'r') as fn:  # Open transcribed file
-                    transcription = fn.read().replace('\n', '')
+                with open('transcribed/' + trans, 'r') as filen:  # Open transcribed file
+                    transcription = filen.read().replace('\n', '')
 
                 keyword = self.searchentry.get()  # Get entry from textbox
                 nooverlapstring = removerlap(transcription.split(' '))  # Call removerlap function
                 words = nooverlapstring.split(' ')  # Splits new transcription into words list
 
-                # Find number of word
-                counter = 1
-                wordlabel = "Word number"
-                timestamplabel = ""
-                shift = 0
-                for i, _ in enumerate(words):
-                    if _ == "--":
-                        counter = counter + 1
-                        shift = i
-                    if keyword.lower() in _.lower():
-                        totalwordpos = i + 1
-                        wpsplit = totalwordpos - shift
-                        wordlabel += " " + str(wpsplit) + ","
-
-                        timestamplabel += self.maptoaudio(counter)
+                # Find word number and time interval
+                wordlabel, time, timestamplabel = findword(words, keyword, self.duration)
 
                 # Write result to label
                 if wordlabel != "Word number":
                     self.wordlabel.config(text=wordlabel)
-
+                    self.estimatelabel.config(text=time)
                     self.timestamplabel.config(text=timestamplabel)
                 else:
                     self.wordlabel.config(text="Word not found")
@@ -162,25 +164,10 @@ class PodSearch(object):
                 self.wordlabel.config(text="Enter word in search field")
 
         else:
-            self.wordlabel.config(text="No file selected")
-
-    def maptoaudio(self, counter):
-        '''Where in audio is result'''
-        seconds1 = (counter - 1) * 14  # Calc interval start
-        minutes, seconds = divmod(seconds1, 60)  # Format to hh:mm:ss
-        hours, minutes = divmod(minutes, 60)
-        time1 = "%d:%02d:%02d" % (hours, minutes, seconds)
-
-        n = 14 if counter == 1 else 12
-        seconds2 = (counter - 1) * 14 + n  # Calc interval end
-        minutes, seconds = divmod(seconds2, 60)  # Format to hh:mm:ss
-        hours, minutes = divmod(minutes, 60)
-        time2 = "%d:%02d:%02d" % (hours, minutes, seconds)
-
-        timestamp = time1 + " - " + time2 + ", "
-        return timestamp
+            self.timestamplabel.config(text="No file selected")
 
     def new_image(self, path):
+        '''Word Cloud image'''
         self.imagefile2 = Image.open(path)
         self.image2 = self.imagefile2.resize((400, 400), Image.ANTIALIAS)
         self.image2 = ImageTk.PhotoImage(self.image2)
@@ -190,5 +177,5 @@ class PodSearch(object):
 root = Tk()
 b = PodSearch(root)
 root.title("Podcast Searcher")
-root.geometry("650x500+150+200")
+root.geometry("650x500+0+200")
 root.mainloop()
