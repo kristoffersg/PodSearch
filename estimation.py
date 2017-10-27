@@ -15,7 +15,10 @@ def findword(words, keyword, duration):
         if _ == "--":  # counts the intervals
             counter = counter + 1
             shift = i
-            shiftstart = (counter - 1) * 14
+            if counter == 1:
+                shiftstart = 0
+            else:
+                shiftstart = (counter - 1) * 12 + 2
         if keyword.lower() in _.lower():  # Compare keyword to word
             totalwordpos = i + 1  # position of word in transcription
             wpsplit = totalwordpos - shift - counter  # Position of word in interval
@@ -28,13 +31,14 @@ def findword(words, keyword, duration):
             if counter == 1:  # If first interval it is 14 seconds
                 decimal = Decimal(wpsplit)/Decimal(wordinterval) * 14
             else:  # every other interval is 12
-                if (counter - 1) * 14 + 12 > duration:  # makes the ready for last interval
+                if (counter - 1) * 12 + 2 > duration:  # makes the ready for last interval
                     lastinterval = duration - shiftstart
                     decimal = Decimal(wpsplit)/Decimal(wordinterval) * int(lastinterval)
                 else:
                     decimal = Decimal(wpsplit)/Decimal(wordinterval) * 12
             # make label of estimation
-            totalseconds = str(round(firsttimestamp(counter) + decimal, 2))
+            n = 0 if counter == 1 else 2
+            totalseconds = str(round((counter - 1) * 12 + n + decimal, 2))
             head, tail = totalseconds.split('.')
             time += str(formattime(int(head)) + "." + tail) + ', '
 
@@ -49,23 +53,20 @@ def findword(words, keyword, duration):
 def calcinterval(counter, duration):
     '''Takes: Interval counter
     Returns: Which interval result is in'''
-    seconds1 = (counter - 1) * 14  # Calc interval start
+    if counter == 1:
+        seconds1 = 0
+        seconds2 = 14
+    else:
+        seconds1 = (counter - 1) * 12 + 2  # Calc interval start
+        seconds2 = seconds1 + 12
+    
     time1 = formattime(seconds1)  # Format to hh:mm:ss
-
-    number = 14 if counter == 1 else 12
-    seconds2 = (counter - 1) * 14 + number  # Calc interval end
     if seconds2 > duration:  # make sure interval doesn't exceed durtion of .wav file
         seconds2 = duration
     time2 = formattime(seconds2)  # Format to hh:mm:ss
 
     timestamp = time1 + " - " + time2 + ", "
     return timestamp
-
-def firsttimestamp(counter):
-    '''Takes: interval counter
-    Returns: Beginning second of interval'''
-    seconds = (counter - 1) * 14
-    return seconds
 
 def formattime(seconds):
     '''Takes: Seconds
