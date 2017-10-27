@@ -38,7 +38,7 @@ def removerlap(words):
             for _ in words[counter + 8:]:
                 rest += " " + _
 
-    transcription += rest
+    transcription += rest + " --"
 
     # Only for debugging
     text_file = open("overlapremoved/Output.txt", "w")
