@@ -15,6 +15,7 @@ def findword(words, keyword, duration):
         if _ == "--":  # counts the intervals
             counter = counter + 1
             shift = i
+            shiftstart = (counter - 1) * 14
         if keyword.lower() in _.lower():  # Compare keyword to word
             totalwordpos = i + 1  # position of word in transcription
             wpsplit = totalwordpos - shift  # Position of word in interval
@@ -27,7 +28,11 @@ def findword(words, keyword, duration):
             if counter == 1:  # If first interval it is 14 seconds
                 decimal = Decimal(wpsplit)/Decimal(wordinterval) * 14
             else:  # every other interval is 12
-                decimal = Decimal(wpsplit)/Decimal(wordinterval) * 12
+                if (counter - 1) * 14 + 12 > duration:  # makes the ready for last interval
+                    lastinterval = duration - shiftstart
+                    decimal = Decimal(wpsplit)/Decimal(wordinterval) * int(lastinterval)
+                else:
+                    decimal = Decimal(wpsplit)/Decimal(wordinterval) * 12
             # make label of estimation
             totalseconds = str(round(firsttimestamp(counter) + decimal, 2))
             head, tail = totalseconds.split('.')
@@ -49,7 +54,7 @@ def calcinterval(counter, duration):
 
     number = 14 if counter == 1 else 12
     seconds2 = (counter - 1) * 14 + number  # Calc interval end
-    if seconds2 > duration:
+    if seconds2 > duration:  # make sure interval doesn't exceed durtion of .wav file
         seconds2 = duration
     time2 = formattime(seconds2)  # Format to hh:mm:ss
 
