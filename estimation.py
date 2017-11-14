@@ -15,7 +15,7 @@ def findword(words, keyword, duration):
         if _ == "--":  # counts the intervals
             counter = counter + 1
             shift = i
-            if counter == 1:
+            if counter == 1: # TODO Skal denne if statement fjernes
                 shiftstart = 0
             else:
                 shiftstart = (counter - 1) * 12 + 2
