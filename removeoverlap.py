@@ -16,6 +16,8 @@ def removerlap(words):
             cnt = cnt + 1
             for _ in words[counter:counter + 8]:
                 wordsplus += " " + _
+            if wordsplus.startswith(' '):
+                wordsplus = wordsplus[1:]
             for _ in words[counter - 2:counter - 10 : -1]:
                 wordsminus += " " + _
 
@@ -24,7 +26,7 @@ def removerlap(words):
                 splitwords = wordsminus.split()
                 wordsminus = " ".join(splitwords[::-1])
                 match = sq(None, wordsminus, wordsplus).find_longest_match(0, len(wordsminus), 0, len(wordsplus))
-                overlap = wordsminus + " " + wordsplus[match.b+match.size:]
+                overlap = wordsminus + wordsplus[match.b+match.size:]
 
             # Before overlap
             tempminus = ""
@@ -36,9 +38,11 @@ def removerlap(words):
             
             rest = ""
             for _ in words[counter + 8:]:
-                rest += " " + _
+                rest += _ + " "
+            if rest.endswith(' '):
+                rest = rest[:-1]
 
-    transcription += rest + " --"
+    transcription += rest + "--"
 
     # Only for debugging
     text_file = open("overlapremoved/Output.txt", "w")

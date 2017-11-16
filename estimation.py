@@ -9,19 +9,16 @@ def findword(words, keyword, duration):
     counter = 1
     wordlabel = "Word number"
     timeintervallabel = ""
-    shift = 0
+    shift = -1
     time = "Estimated at "
-    for i, _ in enumerate(words):
+    for i, _ in enumerate(words[:-1]): # For loop throght words but not the ending "--"
         if _ == "--":  # counts the intervals
             counter = counter + 1
             shift = i
-            if counter == 1: # TODO Skal denne if statement fjernes
-                shiftstart = 0
-            else:
-                shiftstart = (counter - 1) * 12 + 2
+            shiftstartseconds = (counter - 1) * 12 + 2
         if keyword.lower() in _.lower():  # Compare keyword to word
-            totalwordpos = i + 1  # position of word in transcription
-            wpsplit = totalwordpos - shift - counter  # Position of word in interval
+            totalwordpos = i  # position of word in transcription
+            wpsplit = totalwordpos - shift  # Position of word in interval
             wordlabel += " " + str(wpsplit) + ","  # Make label with position
             timeintervallabel += calcinterval(counter, duration)  # Make label with interval
             for k, _ in enumerate(words[totalwordpos:]):  # Find position of interval end
@@ -32,7 +29,7 @@ def findword(words, keyword, duration):
                 decimal = Decimal(wpsplit)/Decimal(wordinterval) * 14
             else:  # every other interval is 12
                 if (counter - 1) * 12 + 2 > duration:  # makes the ready for last interval
-                    lastinterval = duration - shiftstart
+                    lastinterval = duration - shiftstartseconds
                     decimal = Decimal(wpsplit)/Decimal(wordinterval) * int(lastinterval)
                 else:
                     decimal = Decimal(wpsplit)/Decimal(wordinterval) * 12
@@ -59,7 +56,6 @@ def calcinterval(counter, duration):
     else:
         seconds1 = (counter - 1) * 12 + 2  # Calc interval start
         seconds2 = seconds1 + 12
-    
     time1 = formattime(seconds1)  # Format to hh:mm:ss
     if seconds2 > duration:  # make sure interval doesn't exceed durtion of .wav file
         seconds2 = duration
