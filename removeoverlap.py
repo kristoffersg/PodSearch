@@ -14,28 +14,22 @@ def removerlap(words):
             wordsplus = ""
             wordsminus = ""
             cnt = cnt + 1
-            for _ in words[counter:counter + 8]:
+            for _ in words[counter:counter + 6]:
                 wordsplus += " " + _
             if wordsplus.startswith(' '):
                 wordsplus = wordsplus[1:]
-            for _ in words[counter - 2:counter - 10 : -1]:
-                wordsminus += " " + _
+            for _ in words[counter - 7:counter - 1]:
+                wordsminus += _ + " "
 
             # Merge overlap
             if wordsminus != "":
-                splitwords = wordsminus.split()
-                wordsminus = " ".join(splitwords[::-1])
                 match = sq(None, wordsminus, wordsplus).find_longest_match(0, len(wordsminus), 0, len(wordsplus))
                 overlap = wordsminus + wordsplus[match.b+match.size:]
 
             # Before overlap
-            tempminus = ""
-            remwords = words[start: counter - 9] if cnt == 2 else words[start + 8: counter - 9]
-            
-            tempminus += ' '.join(remwords) + ' ' + overlap + ' -- '
-            start = counter            
-            transcription += tempminus
-            
+            remwords = words[start: counter - 10] if cnt == 2 else words[start + 6: counter - 7]            
+            transcription += ' '.join(remwords) + ' ' + overlap + ' -- '
+            start = counter
             rest = ""
             for _ in words[counter + 8:]:
                 rest += _ + " "
@@ -49,4 +43,4 @@ def removerlap(words):
     text_file.write(transcription)
     text_file.close()
 
-    return transcription    
+    return transcription

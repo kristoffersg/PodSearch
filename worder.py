@@ -1,36 +1,35 @@
 # # Imports ____________________________________________________________________________________________________________
 # Wordcloud
-import numpy as np
-from PIL import Image
 from os import path
 import random
-from wordcloud import WordCloud, STOPWORDS
 from os.path import basename
+import numpy as np
+from PIL import Image
+from wordcloud import WordCloud
 
 
 def grey_color_func(word, font_size, position, orientation, random_state=None, **kwargs):
+    '''Set color for cloud'''
     return "hsl(0, 0%%, %d%%)" % random.randint(60, 100)
 
 
 def wordcloud_create(filename):
+    '''Takes: Filename
+    Returns: path to wordcloud'''
     d = path.dirname(__file__)
-
-    # Set source to the audio file in question
-    rawInput = basename(filename)
-    input_ = rawInput.replace(".wav", ".txt")
 
     # # Read the mask image
     # taken from
     # https://commons.wikimedia.org/wiki/File:Cloud_font_awesome.svg
     mask = np.array(Image.open(path.join(d, "wordcloudTools/cloud.png")))
 
-    # # Load transcribed txt file:
+    # Set source to the audio file and load transcrption
+    input_ = basename(filename).replace(".wav", ".txt")
     text = open(path.join(d, "transcribed/" + input_)).read()
 
     # # Preprocessing of stopwords:
     stopwords = open(path.join(d, "wordcloudTools/stopwords.txt")).read()   #Loading stopwords file
-    stopwords = stopwords.split()                                           #Splitting stopwords file into correct format
-    stopwords = set(stopwords)                                              #Making the stopwords file a set
+    stopwords = set(stopwords.split()) #Splitting stopwords file into correct format
 
     # # Wordcloud generation:
     wc = WordCloud(max_words=1000, mask=mask, stopwords=stopwords, margin=10, random_state=1).generate(text)

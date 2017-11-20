@@ -11,6 +11,7 @@ from PIL import ImageTk, Image
 from removeoverlap import removerlap
 from estimation import findword
 from audioduration import *
+from nltk.stem import PorterStemmer
 
 
 class PodSearch(object):
@@ -142,10 +143,11 @@ class PodSearch(object):
 
         if not trans == '':
             if not self.searchentry.get() == '':
-                with open('transcribed/' + trans, 'r') as filen:  # Open transcribed file
+                with open('transcribed/stem_' + trans, 'r') as filen:  # Open transcribed file
                     transcription = filen.read().replace('\n', '')
 
                 keyword = self.searchentry.get()  # Get entry from textbox
+                keyword = PorterStemmer().stem(keyword)
                 nooverlapstring = removerlap(transcription.split(' '))  # Call removerlap function
                 words = nooverlapstring.split(' ')  # Splits new transcription into words list
 
@@ -160,6 +162,8 @@ class PodSearch(object):
                 else:
                     self.wordlabel.config(text="Word not found")
                     self.timestamplabel.config(text="")
+                    self.estimatelabel.config(text="")
+
             else:
                 self.wordlabel.config(text="Enter word in search field")
 
