@@ -27,7 +27,7 @@ def removerlap(words):
                 overlap = wordsminus + wordsplus[match.b+match.size:]
 
             # Before overlap
-            remwords = words[start: counter - 10] if cnt == 2 else words[start + 6: counter - 7]            
+            remwords = words[start: counter - 10] if cnt == 2 else words[start + 6: counter - 7]
             transcription += ' '.join(remwords) + ' ' + overlap + ' -- '
             start = counter
             rest = ""

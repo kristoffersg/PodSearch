@@ -1,5 +1,4 @@
-# # Imports ____________________________________________________________________________________________________________
-# Wordcloud
+'''Module for generating wordcloud'''
 from os import path
 import random
 from os.path import basename

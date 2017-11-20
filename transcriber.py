@@ -68,4 +68,3 @@ def transcribe(filename):
 
     path_to_transcribed_file = "transcribed/" + input_ + ".txt"
     return path_to_transcribed_file
-

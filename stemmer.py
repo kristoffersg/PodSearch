@@ -13,7 +13,7 @@ def stemmer_func(filename):
     rawinput = basename(input_)                                              #Cut away folder path
     string = open(input_ + '.txt').read()
     new_str = re.sub('[^a-zA-Z0-9\n\" "-]', '', string)      #Remove all non-alphanumeric characters
-    open("transcribed/stem_" + rawinput + '.txt', 'w').close() #Generate/reset txt file for stemmed words
+    open("transcribed/stem_" + rawinput + '.txt', 'w').close() #Generate txt file for stemmed words
 
     # Stopwords import_____________________________________________________________________________
     d = path.dirname(__file__)
@@ -23,9 +23,9 @@ def stemmer_func(filename):
     # Stemming and Stopword removal process________________________________________________________
     ps = PorterStemmer()
     words = word_tokenize(new_str)
-    for w in words:
-        if w not in stopwords:
-            stemmed = ps.stem(w)
+    for _ in words:
+        if _ not in stopwords:
+            stemmed = ps.stem(_)
             print stemmed
             open("transcribed/stem_" + rawinput + '.txt', 'a').write(stemmed + " ")
 
