@@ -31,7 +31,7 @@ def removerlap(words):
             transcription += ' '.join(remwords) + ' ' + overlap + ' -- '
             start = counter
             rest = ""
-            for _ in words[counter + 8:]:
+            for _ in words[counter + 6:]:
                 rest += _ + " "
             if rest.endswith(' '):
                 rest = rest[:-1]

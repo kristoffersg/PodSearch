@@ -66,7 +66,7 @@ def calcinterval(counter, duration):
 
 def formattime(seconds):
     '''Takes: Seconds
-    Returns: Seconds in hh:mm:ss'''
+    Returns: hh.mm.ss'''
     minutes, seconds = divmod(seconds, 60)
     hours, minutes = divmod(minutes, 60)
     time = "%d:%02d:%02d" % (hours, minutes, seconds)
