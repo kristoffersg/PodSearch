@@ -9,9 +9,9 @@ from worder import wordcloud_create
 from stemmer import stemmer_func
 from PIL import ImageTk, Image
 from removeoverlap import removerlap
-from estimation import findword
 from audioduration import findduration
 from nltk.stem import PorterStemmer
+from estimation import findword
 
 
 class PodSearch(object):

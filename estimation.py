@@ -17,13 +17,12 @@ def findword(words, keyword, duration):
             shift = i
             shiftstartseconds = (counter - 1) * 12 + 2
         if keyword.lower() in _.lower():  # Compare keyword to word
-            totalwordpos = i  # position of word in transcription
-            wpsplit = totalwordpos - shift  # Position of word in interval
+            wpsplit = i - shift  # Position of word in interval
             wordlabel += " " + str(wpsplit) + ","  # Make label with position
             timeintervallabel += calcinterval(counter, duration)  # Make label with interval
-            for k, _ in enumerate(words[totalwordpos:]):  # Find position of interval end
+            for k, _ in enumerate(words[i:]):  # Find position of interval end
                 if _ == "--":
-                    wordinterval = totalwordpos + k - shift - counter
+                    wordinterval = k + wpsplit - counter
                     break
             if counter == 1:  # If first interval it is 14 seconds
                 decimal = Decimal(wpsplit)/Decimal(wordinterval) * 14

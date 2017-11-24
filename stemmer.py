@@ -10,9 +10,9 @@ def stemmer_func(string):
     new_str = re.sub('[^a-zA-Z0-9\n\" "-]', '', string) #Remove all non-alphanumeric characters
 
     # Stemming_____________________________________________________________________________________
-    ps = PorterStemmer()
+    porterstemmer = PorterStemmer()
     words = word_tokenize(new_str)
     stemmed = ""
     for _ in words:
-        stemmed += ps.stem(_) + ' '
+        stemmed += porterstemmer.stem(_) + ' '
     return stemmed
