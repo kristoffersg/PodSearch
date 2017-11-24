@@ -1,6 +1,5 @@
 '''Module for generating wordcloud'''
 from os import path
-from os.path import basename
 import random
 import numpy as np
 from PIL import Image

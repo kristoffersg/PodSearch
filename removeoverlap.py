@@ -11,20 +11,20 @@ def removerlap(words):
     for _ in words[1:len(words)-1]:
         counter += 1
         if _ == "--":
-            wordsplus = ""
-            wordsminus = ""
+            after = ""
+            before = ""
             cnt += 1
             for _ in words[counter:counter + 6]:
-                wordsplus += " " + _
-            if wordsplus.startswith(' '):
-                wordsplus = wordsplus[1:]
+                after += " " + _
+            if after.startswith(' '):
+                after = after[1:]
             for _ in words[counter - 7:counter - 1]:
-                wordsminus += _ + " "
+                before += _ + " "
 
             # Merge overlap
-            if wordsminus != "":
-                match = sq(None, wordsminus, wordsplus).find_longest_match(0, len(wordsminus), 0, len(wordsplus))
-                overlap = wordsminus + wordsplus[match.b+match.size:]
+            if before != "":
+                match = sq(None, before, after).find_longest_match(0, len(before), 0, len(after))
+                overlap = before + after[match.b+match.size:]
 
             # Before overlap
             remwords = words[start: counter - 10] if cnt == 2 else words[start + 6: counter - 7]
