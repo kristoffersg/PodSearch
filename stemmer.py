@@ -3,11 +3,10 @@ import re
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
 
-def stemmer_func(filename):
+def stemmer_func(string):
     '''Takes: Filename
     Returns: Path to stemmed transcription'''
     # Preprocessing of the transcribed text-file___________________________________________________
-    string = open(filename).read()
     new_str = re.sub('[^a-zA-Z0-9\n\" "-]', '', string) #Remove all non-alphanumeric characters
 
     # Stemming_____________________________________________________________________________________

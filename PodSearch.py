@@ -124,12 +124,12 @@ class PodSearch(object):
         self.pbar_det.pack()  # show the progress bar
         self.pbar_det.start()  # Start the progress bar
         root.update()
-        new_path = transcribe(self.filename)  # Call transcribe
+        transcription = transcribe(self.filename)  # Call transcribe
         self.workinglabel.config(text="")  # remove working label
 
-        wordcloud_path = wordcloud_create(self.filename)
+        wordcloud_path = wordcloud_create(transcription)
         self.new_image(wordcloud_path)
-        self.stemmed = stemmer_func(new_path)
+        self.stemmed = stemmer_func(transcription)
 
         self.pbar_det.stop()  # Stop progress bar
         self.pbar_det.pack_forget()  # Remove progress bar
