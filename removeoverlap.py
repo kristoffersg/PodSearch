@@ -9,11 +9,11 @@ def removerlap(words):
     start = counter
     transcription = ""
     for _ in words[1:len(words)-1]:
-        counter = counter + 1
+        counter += 1
         if _ == "--":
             wordsplus = ""
             wordsminus = ""
-            cnt = cnt + 1
+            cnt += 1
             for _ in words[counter:counter + 6]:
                 wordsplus += " " + _
             if wordsplus.startswith(' '):
