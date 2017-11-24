@@ -147,7 +147,7 @@ class PodSearch(object):
                     transcription = filen.read().replace('\n', '')
 
                 keyword = self.searchentry.get()  # Get entry from textbox
-                keyword = PorterStemmer().stem(keyword)
+                keyword = PorterStemmer().stem(keyword)  # Stemming the keyword
                 nooverlapstring = removerlap(transcription.split(' '))  # Call removerlap function
                 words = nooverlapstring.split(' ')  # Splits new transcription into words list
 
