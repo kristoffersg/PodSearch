@@ -48,7 +48,6 @@ class PodSearch(object):
                            highlightthickness=1, width=250, height=250)
         rightframe.pack(side=RIGHT)
 
-
         # Browse button
         self.browsebtn = Button(self.leftsubframe_top, text="Browse", command=self.browse)
         self.browsebtn.pack(side=LEFT)
@@ -100,8 +99,13 @@ class PodSearch(object):
         self.display = self.image1
         self.panel1.pack(side=TOP, fill=BOTH, expand=YES)
 
+        # Non GUI initializations
         self.duration = 0
-
+        self.transcription = ""
+        self.stemmed = ""
+        self.transcription = ""
+        self.imagefile2 = 0
+        self.image2 = 0
 
 
     # Browse function

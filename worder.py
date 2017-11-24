@@ -1,7 +1,7 @@
 '''Module for generating wordcloud'''
 from os import path
-import random
 from os.path import basename
+import random
 import numpy as np
 from PIL import Image
 from wordcloud import WordCloud
@@ -11,14 +11,12 @@ def grey_color_func(word, font_size, position, orientation, random_state=None, *
     '''Set color for cloud'''
     return "hsl(0, 0%%, %d%%)" % random.randint(60, 100)
 
-
 def wordcloud_create(words):
     '''Takes: Filename
     Returns: path to wordcloud'''
     d = path.dirname(__file__)
 
-    # # Read the mask image
-    # taken from
+    # Read the mask image from
     # https://commons.wikimedia.org/wiki/File:Cloud_font_awesome.svg
     mask = np.array(Image.open(path.join(d, "wordcloudTools/cloud.png")))
 
