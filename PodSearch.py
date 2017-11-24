@@ -124,12 +124,13 @@ class PodSearch(object):
         self.pbar_det.pack()  # show the progress bar
         self.pbar_det.start()  # Start the progress bar
         root.update()
-        transcription = transcribe(self.filename)  # Call transcribe
+        self.transcription = transcribe(self.filename)  # Call transcribe
         self.workinglabel.config(text="")  # remove working label
 
-        wordcloud_path = wordcloud_create(transcription)
+        self.stemmed = stemmer_func(self.transcription)
+        wordcloud_path = wordcloud_create(self.transcription)
+        self.transcription = removerlap(self.stemmed.split(' '))
         self.new_image(wordcloud_path)
-        self.stemmed = stemmer_func(transcription)
 
         self.pbar_det.stop()  # Stop progress bar
         self.pbar_det.pack_forget()  # Remove progress bar
@@ -145,8 +146,7 @@ class PodSearch(object):
             if not self.searchentry.get() == '':
                 keyword = self.searchentry.get()  # Get entry from textbox
                 keyword = PorterStemmer().stem(keyword)  # Stemming the keyword
-                nooverlapstring = removerlap(self.stemmed.split(' '))  # Call removerlap function
-                words = nooverlapstring.split(' ')  # Splits new transcription into words list
+                words = self.transcription.split(' ')
 
                 # Find word number and time interval
                 wordlabel, time, timestamplabel = findword(words, keyword, self.duration)

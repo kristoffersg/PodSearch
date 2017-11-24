@@ -39,7 +39,7 @@ def removerlap(words):
     transcription += rest + "--"
 
     # Only for debugging
-    text_file = open("overlapremoved/Output.txt", "w")
+    text_file = open("transcription/Output.txt", "w")
     text_file.write(transcription)
     text_file.close()
 
