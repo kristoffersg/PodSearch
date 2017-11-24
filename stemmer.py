@@ -9,10 +9,10 @@ def stemmer_func(filename):
     '''Takes: Filename
     Returns: Path to stemmed transcription'''
     # Preprocessing of the transcribed text-file___________________________________________________
-    rawinput = basename(filename)                                              #Cut away folder path
+    rawinput = basename(filename)                       #Cut away folder path
     string = open(filename).read()
-    new_str = re.sub('[^a-zA-Z0-9\n\" "-]', '', string)      #Remove all non-alphanumeric characters
-    open("transcribed/stem_" + rawinput, 'w').close() #Generate txt file for stemmed words
+    new_str = re.sub('[^a-zA-Z0-9\n\" "-]', '', string) #Remove all non-alphanumeric characters
+    open("transcribed/stem_" + rawinput, 'w').close()   #Generate txt file for stemmed words
 
     # Stemming_____________________________________________________________________________________
     ps = PorterStemmer()
