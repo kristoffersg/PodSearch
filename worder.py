@@ -19,14 +19,14 @@ def wordcloud_create(words):
     # https://commons.wikimedia.org/wiki/File:Cloud_font_awesome.svg
     mask = np.array(Image.open(path.join(d, "wordcloudTools/cloud.png")))
 
-    # # Preprocessing of stopwords:
+    # Preprocessing of stopwords:
     stopwords = open(path.join(d, "wordcloudTools/stopwords.txt")).read() #Loading stopwords file
     stopwords = set(stopwords.split()) #Splitting stopwords file into correct format
 
-    # # Wordcloud generation:
+    # Wordcloud generation:
     wc = WordCloud(max_words=1000, mask=mask, stopwords=stopwords, margin=10, random_state=1).generate(words)
 
-    # # For black/white wordcloud:
+    # For black/white wordcloud:
     wc.recolor(color_func=grey_color_func, random_state=3)
     wordcloud_path = "wordcloudTools/Wordcloud_result.png"
     wc.to_file(wordcloud_path)
