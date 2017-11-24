@@ -129,7 +129,7 @@ class PodSearch(object):
 
         wordcloud_path = wordcloud_create(self.filename)
         self.new_image(wordcloud_path)
-        stemmer_func(new_path)
+        self.stemmed = stemmer_func(new_path)
 
         self.pbar_det.stop()  # Stop progress bar
         self.pbar_det.pack_forget()  # Remove progress bar
@@ -143,12 +143,9 @@ class PodSearch(object):
 
         if not trans == '':
             if not self.searchentry.get() == '':
-                with open('transcribed/stem_' + trans, 'r') as filen:  # Open transcribed file
-                    transcription = filen.read().replace('\n', '')
-
                 keyword = self.searchentry.get()  # Get entry from textbox
                 keyword = PorterStemmer().stem(keyword)  # Stemming the keyword
-                nooverlapstring = removerlap(transcription.split(' '))  # Call removerlap function
+                nooverlapstring = removerlap(self.stemmed.split(' '))  # Call removerlap function
                 words = nooverlapstring.split(' ')  # Splits new transcription into words list
 
                 # Find word number and time interval
