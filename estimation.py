@@ -13,7 +13,7 @@ def findword(words, keyword, duration):
     time = "Estimated at "
     for i, _ in enumerate(words[:-1]): # For loop throght words but not the ending "--"
         if _ == "--":  # counts the intervals
-            counter = counter + 1
+            counter += 1
             shift = i
             shiftstartseconds = (counter - 1) * 12 + 2
         if keyword.lower() in _.lower():  # Compare keyword to word

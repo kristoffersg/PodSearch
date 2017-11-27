@@ -129,24 +129,21 @@ class PodSearch(object):
         self.pbar_det.start()  # Start the progress bar
         root.update()
         self.transcription = transcribe(self.filename)  # Call transcribe
-        self.workinglabel.config(text="")  # remove working label
 
         self.stemmed = stemmer_func(self.transcription)
         wordcloud_path = wordcloud_create(self.transcription)
         self.transcription = removerlap(self.stemmed.split(' '))
         self.new_image(wordcloud_path)
-
+        
+        self.workinglabel.config(text="")  # remove working label
         self.pbar_det.stop()  # Stop progress bar
         self.pbar_det.pack_forget()  # Remove progress bar
 
 
     # Search function
     def search(self):
-        '''Search in transcription'''
-        # Open transcription
-        trans = basename(self.filename).replace(".wav", ".txt")
-
-        if not trans == '':
+        '''Search using text domain'''
+        if not self.transcription == '':
             if not self.searchentry.get() == '':
                 keyword = self.searchentry.get()  # Get entry from textbox
                 keyword = PorterStemmer().stem(keyword)  # Stemming the keyword
@@ -164,10 +161,8 @@ class PodSearch(object):
                     self.wordlabel.config(text="Word not found")
                     self.timestamplabel.config(text="")
                     self.estimatelabel.config(text="")
-
             else:
                 self.wordlabel.config(text="Enter word in search field")
-
         else:
             self.timestamplabel.config(text="No file selected")
 
