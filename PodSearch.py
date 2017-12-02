@@ -176,6 +176,6 @@ class PodSearch(object):
 
 root = Tk()
 b = PodSearch(root)
-root.title("Podcast Searcher")
+root.title("Podcast Searcher TDA")
 root.geometry("650x500+0+200")
 root.mainloop()
