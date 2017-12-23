@@ -132,7 +132,7 @@ class PodSearch(object):
 
         self.stemmed = stemmer_func(self.transcription)
         wordcloud_path = wordcloud_create(self.transcription)
-        # self.transcription = removerlap(self.stemmed.split(' '))
+        self.transcription = removerlap(self.stemmed.split(' '))
         self.new_image(wordcloud_path)
         
         self.workinglabel.config(text="")  # remove working label

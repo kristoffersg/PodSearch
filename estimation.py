@@ -26,15 +26,18 @@ def findword(words, keyword, duration):
                     break
             if counter == 1:  # If first interval it is 14 seconds
                 decimal = Decimal(wpsplit)/Decimal(wordinterval) * 14
+                shiftseconds = 14 / Decimal(wordinterval)
             else:  # every other interval is 12
                 if (counter - 1) * 12 + 2 > duration:  # makes the ready for last interval
                     lastinterval = duration - shiftstartseconds
                     decimal = Decimal(wpsplit)/Decimal(wordinterval) * int(lastinterval)
+                    shiftseconds =  int(lastinterval) / Decimal(wordinterval)
                 else:
                     decimal = Decimal(wpsplit)/Decimal(wordinterval) * 12
+                    shiftseconds = 12/Decimal(wordinterval)
             # make label of estimation
             n = 0 if counter == 1 else 2
-            totalseconds = str(round((counter - 1) * 12 + n + decimal, 2))
+            totalseconds = str(round(((counter - 1) * 12 + n + decimal)-shiftseconds, 2))
             head, tail = totalseconds.split('.')
             time += str(formattime(int(head)) + "." + tail) + ', '
 
