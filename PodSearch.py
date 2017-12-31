@@ -24,28 +24,23 @@ class PodSearch(object):
     def __init__(self, master):
         '''Init of the GUI'''
         # Frame for progress bar
-        self.bottomframe = Frame(master, highlightbackground="green", highlightcolor="green",
-                                 highlightthickness=1, width=500, height=200)
+        self.bottomframe = Frame(master, highlightbackground="green", width=500, height=200)
         self.bottomframe.pack(side=BOTTOM)
 
         # Frame for buttons and entry
-        self.leftframe = Frame(master, highlightbackground="blue", highlightcolor="blue",
-                               highlightthickness=1, width=400, height=400)
+        self.leftframe = Frame(master, highlightbackground="blue", width=400, height=400)
         self.leftframe.pack(side=LEFT)
 
         # Sub frame  for buttons
-        self.leftsubframe_top = Frame(self.leftframe, highlightbackground="yellow",
-                                      highlightcolor="yellow", highlightthickness=1)
+        self.leftsubframe_top = Frame(self.leftframe, highlightbackground="yellow")
         self.leftsubframe_top.pack(side=TOP)
 
         # Sub frame for entry
-        self.leftsubframe_bot = Frame(self.leftframe, highlightbackground="purple",
-                                      highlightcolor="purple", highlightthickness=1)
+        self.leftsubframe_bot = Frame(self.leftframe, highlightbackground="purple")
         self.leftsubframe_bot.pack(side=BOTTOM)
 
         # Frame for wordcloud
-        rightframe = Frame(master, highlightbackground="red", highlightcolor="red",
-                           highlightthickness=1, width=250, height=250)
+        rightframe = Frame(master, highlightbackground="red", width=250, height=250)
         rightframe.pack(side=RIGHT)
 
         # Browse button
@@ -85,9 +80,9 @@ class PodSearch(object):
         self.workinglabel = Label(self.bottomframe)
         self.workinglabel.pack()
 
-        # Progress Bar
-        self.pbar_det = ttk.Progressbar(self.bottomframe, orient="horizontal", length=400,
-                                        mode="indeterminate")
+        # # Progress Bar
+        # self.pbar_det = ttk.Progressbar(self.bottomframe, orient="horizontal", length=400,
+        #                                 mode="indeterminate")
 
         # Wordcloud preparation
         self.imagefile = "wordcloudTools/black_background.png"
@@ -123,10 +118,10 @@ class PodSearch(object):
         if self.filename.endswith('.txt'):
             return
         self.duration = findduration(self.filename)
-        self.workinglabel.config(text="WORKING", font=(
+        self.estimatelabel.config(text="WORKING", font=(
             "Helvetica", 20))  # Show WORKING when transcribing
-        self.pbar_det.pack()  # show the progress bar
-        self.pbar_det.start()  # Start the progress bar
+        # self.pbar_det.pack()  # show the progress bar
+        # self.pbar_det.start()  # Start the progress bar
         root.update()
         self.transcription = transcribe(self.filename)  # Call transcribe
 
@@ -135,9 +130,9 @@ class PodSearch(object):
         self.transcription = removerlap(self.stemmed.split(' '))
         self.new_image(wordcloud_path)
         
-        self.workinglabel.config(text="")  # remove working label
-        self.pbar_det.stop()  # Stop progress bar
-        self.pbar_det.pack_forget()  # Remove progress bar
+        self.estimatelabel.config(text="")  # remove working label
+        # self.pbar_det.stop()  # Stop progress bar
+        # self.pbar_det.pack_forget()  # Remove progress bar
 
 
     # Search function
@@ -154,9 +149,9 @@ class PodSearch(object):
 
                 # Write result to label
                 if wordlabel != "Word number":
-                    self.wordlabel.config(text=wordlabel)
-                    self.estimatelabel.config(text=time)
-                    self.timestamplabel.config(text=timestamplabel)
+                    # self.wordlabel.config(text=wordlabel)
+                    self.estimatelabel.config(text=time, font=("Helvetica", 9))
+                    self.timestamplabel.config(text=timestamplabel, font=("Helvetica", 9))
                 else:
                     self.wordlabel.config(text="Word not found")
                     self.timestamplabel.config(text="")

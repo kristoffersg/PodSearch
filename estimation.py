@@ -8,9 +8,9 @@ def findword(words, keyword, duration):
     # Initialization of variables
     counter = 1
     wordlabel = "Word number"
-    timeintervallabel = ""
+    timeintervallabel = "Located in: "
     shift = -1
-    time = "Estimated at "
+    time = "Estimated at: "
     for i, _ in enumerate(words[:-1]): # For loop throght words but not the ending "--"
         if _ == "--":  # counts the intervals
             counter += 1
@@ -71,5 +71,5 @@ def formattime(seconds):
     Returns: hh.mm.ss'''
     minutes, seconds = divmod(seconds, 60)
     hours, minutes = divmod(minutes, 60)
-    time = "%d:%02d:%02d" % (hours, minutes, seconds)
+    time = "%02d:%02d:%02d" % (hours, minutes, seconds)
     return time
